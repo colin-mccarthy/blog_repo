@@ -1,0 +1,15 @@
+---
+- name: parser example
+  hosts: ios
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+  - name: show version
+    ios_command:
+      commands:
+        - show version
+    register: version
+  - debug: var=version
+

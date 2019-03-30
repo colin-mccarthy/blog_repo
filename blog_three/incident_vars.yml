@@ -1,0 +1,14 @@
+#snow_record variables
+
+username: admin
+password: Redhat1!
+instance: dev41539
+
+state: present
+
+#data variables
+
+severity: 2
+priority: 2
+category: network
+

@@ -1,0 +1,56 @@
+interface Vlan185
+ description Prod User Vlan185
+ ip address 10.8.185.254 255.255.255.0
+ ip helper-address 170.217.8.90
+ ip helper-address 170.217.8.88
+ ip helper-address 170.217.6.3
+ ip helper-address 10.200.97.240
+ no ip redirects
+ no ip proxy-arp
+ ip pim sparse-dense-mode
+ load-interval 30
+end
+
+
+router ospf 100
+ passive interface vlan 185
+
+ new_incident.record.number
+
+ sudo sed -i -e 's/new_incident.record.number/new_ticket.record.number/g'
+
+
+
+ number: "{{ snow_ticket_number | default(omit) }}"
+ attachment: "{{ snow.attachment | default(omit) }}"
+
+
+ - name: Build SNOW Notes
+   set_fact:
+     snow:
+       work_notes: "{{ new_config | join('\n') }}"
+       attachment: final_config.txt
+
+
+
+- name: Create New Router Configuration
+  template:
+    src: bgp_template.j2
+    dest: final_config.txt
+  delegate_to: localhost
+  tags: config
+
+  new_config: >
+  [ '[code] <font color="blue">' ] +
+  [ 'Configuration Applied' ] +
+  [ '</font> [/code]' ]  +
+  {{ config_file_contents }}
+
+
+
+
+  Turn off process isolation.
+
+  must use certificates - not able to use passwords for CyberArk API.
+
+  firewall, certs, 
