@@ -40,19 +40,105 @@ I will cover the tools and best practices I used while maintaining the https://g
 Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
 
 
+[black big]*GitFlow*
 
-[black big]*example.yml*
+While I developed this role on my own I still wanted to hold myself to using Git collaboration best practices. I used the GitFlow workflow for all changes to the code. I created a [red]#devel# branch and worked in there for all my testing and additions to the codebase. Once I had something something new or a bug fix figured out and was happy with it, I created a Pull request against the [red]#master# branch. If you ever have a chance to contribute to the open-source Ansible project on GitHub you will follow the same processes of forking and creating pull requests.
+
+Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting. When you are working on a code project with other people who are also contributing this flow becomes imperative. Learn this before
+worrying about CI with Travis, hooks,  or anything else.
+
+[black big]*One Role One Repo*
+
+Utilizing the one role one repo thought process for scalability and compatibility with Galaxy.
+
+I am a firm believer you should store your roles in their own repo, I like to call this style One Role One Repo. I am often asked how to structure your Git repos when getting started with network automation so that you can easily scale and not have to make a bunch of changes later down the road. Some folks look at my strange when I advise them to structure their repos like this. They say well what if I we grow to having 1000 roles, we don't want to have 1000 repo’s. Yes you do actually!
+
+A great presentation on this subject was given by Sam Doran a Senior Software Dev at Ansible/Red Hat during AnsibleFest London 2017. I always recommend folks go and watch that on YouTube if they want to understand how to scale.
+
+If you think about it, every role should be documented, permissioned, and shared on it’s own. What if you want to share your BGP roles with a certain department but they don’t need to see your OSPF and MPLS roles. How would you easily share those if they were all in the same repo.
+
+Ansible Galaxy uses this same system, every role can be downloaded or cloned separately. Hopefully you may have some roles that you wish to share with the community. Also when you start to maintain these roles with a CI/CD mindset and start using tools like ZUUL. It all makes sense why they should live in their own repo’s.
+
+
+
+[black big]*Dependencies*
+
+When you create a role using the ansible-galaxy init command it will automatically create a meta/main.yml file. This file is where you can list your role dependencies. In this case my role does require another role in order to function. If you read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you to network-engine.
+
+
+
+[black big]*Travis CI*
+
+ I have been looking into adding some CI to this repo based on the repos or ---
+language: python
+services: docker
+
+env:
+  global:
+    - ROLE_NAME: gitlab
+  matrix:
+    - MOLECULE_DISTRO: centos7
+    - MOLECULE_DISTRO: ubuntu1804
+    - MOLECULE_DISTRO: debian9
+    - MOLECULE_DISTRO: centos7
+      MOLECULE_PLAYBOOK: playbook-version.yml
+    - MOLECULE_DISTRO: ubuntu1804
+      MOLECULE_PLAYBOOK: playbook-version.yml
+
+install:
+  # Install test dependencies.
+  - pip install molecule docker
+
+before_script:
+  # Use actual Ansible Galaxy role name for the project directory.
+  - cd ../
+  - mv ansible-role-$ROLE_NAME geerlingguy.$ROLE_NAME
+  - cd geerlingguy.$ROLE_NAME
+
+script:
+  # Run tests.
+  - molecule test
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
+
+ This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use Travis because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into ZUUL as the Ansible Network Software Team uses this to drive their CI however it would require I stand up a server.
+
+ I'm going to add this to the repo and create a follow up blog on this subject in the future.
+
+[black big]*Pre Commit Hooks*
+
+hooks are very valuable when you start to contribute to a repo with business rules and production code.
+A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
+just incase someone tries to commit them by accident.
+
+
+https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
+
+https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint[yaml lint] is a yaml linter.
+
+https://github.com/awslabs/git-secrets[SecretsChecker] checks for accidental passwords or secrest left in the code your trying to commit.
+
+
+
+
+
+[black big]*Bots*
+
+
+
+
+
+
+
+[black big]*Multi vendor support*
 
 image:images/version.jpg[]
 
-The parser takes the command output and creates a dictionary. The data points you want to use later in your playbook, are now parameters of [red]#system_facts#.
+ are now parameters of [red]#system_facts#.
 
 
 image:images/example.jpg[]
-
-What I would like to do is add some fields in the ServiceNow change_request template, then add the version and uptime to every change request Ansible creates.
-
-In ServiceNow this is done under Configure > Form Layout.
 
 image:images/layout.jpg[]
 
@@ -68,16 +154,8 @@ image:images/api.jpg[]
 We can use these new fields in the [red]#data# section of our [red]#snow_record module#.
 Here is a complete playbook that will run the show version command, parse the output and add the parameters into the new fields for us.
 
-image:images/play.jpg[]
 
-
-The new fields are now populated in our ServiceNow change request.
-
-image:images/ticketvars.jpg[]
-
-
-
-[black big]*If you're interested in learning more, stay tuned for Part 5 of this series. We will continue to build a framework for fully automating our network tickets.*
+[black big]*Stay tuned for more blogs where I will dig deeper into these individual subjects*
 
 
 
@@ -89,5 +167,5 @@ image:images/ticketvars.jpg[]
 |===
 
 |===
-TheNetwork.Engineer - July 8 2018  -  Colin McCarthy
+TheNetwork.Engineer - March 30 2019  -  Colin McCarthy
 |===
