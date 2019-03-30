@@ -53,64 +53,32 @@ Utilizing the one role one repo thought process for scalability and compatibilit
 
 I am a firm believer you should store your roles in their own repo, I like to call this style One Role One Repo. I am often asked how to structure your Git repos when getting started with network automation so that you can easily scale and not have to make a bunch of changes later down the road. Some folks look at my strange when I advise them to structure their repos like this. They say well what if I we grow to having 1000 roles, we don't want to have 1000 repo’s. Yes you do actually!
 
-A great presentation on this subject was given by Sam Doran a Senior Software Dev at Ansible/Red Hat during AnsibleFest London 2017. I always recommend folks go and watch that on YouTube if they want to understand how to scale.
+A great presentation on this subject was given by Sam Doran a Senior Software Dev at Ansible/Red Hat during AnsibleFest London 2017. I always recommend folks go and watch that if they want to understand how to scale. You can find that presentation recording https://www.ansible.com/running-ansible-at-scale[here]
 
-If you think about it, every role should be documented, permissioned, and shared on it’s own. What if you want to share your BGP roles with a certain department but they don’t need to see your OSPF and MPLS roles. How would you easily share those if they were all in the same repo.
+If you think about it... every role should be documented, permissioned, and shared on it’s own. What if you want to share your BGP roles with a certain department but they don’t need to see your OSPF and MPLS roles. How would you easily share those if they were all in the same repo.
 
-Ansible Galaxy uses this same system, every role can be downloaded or cloned separately. Hopefully you may have some roles that you wish to share with the community. Also when you start to maintain these roles with a CI/CD mindset and start using tools like ZUUL. It all makes sense why they should live in their own repo’s.
+Ansible Galaxy uses this same system, every role can be downloaded or cloned separately. Hopefully you may have some roles that you wish to share with the community. Also when you start to maintain these roles with a CI/CD mindset and start using tools like https://www.zuul-ci.org[ZUUL]. It all makes sense why they should live in their own repo’s.
 
 
 
 [black big]*Dependencies*
 
-When you create a role using the ansible-galaxy init command it will automatically create a meta/main.yml file. This file is where you can list your role dependencies. In this case my role does require another role in order to function. If you read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you to network-engine.
-
+When you create a role using the [red]#ansible-galaxy init# command it will automatically create a meta/main.yml file. This file is where you can list your role dependencies. In this case my role does require another role in order to function. If you read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you to network-engine.
 
 
 [black big]*Travis CI*
 
- I have been looking into adding some CI to this repo based on the repos or ---
-language: python
-services: docker
+ I have been looking into adding some CI to this repo based on the repos of https://galaxy.ansible.com/api/v1/notifications/[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
 
-env:
-  global:
-    - ROLE_NAME: gitlab
-  matrix:
-    - MOLECULE_DISTRO: centos7
-    - MOLECULE_DISTRO: ubuntu1804
-    - MOLECULE_DISTRO: debian9
-    - MOLECULE_DISTRO: centos7
-      MOLECULE_PLAYBOOK: playbook-version.yml
-    - MOLECULE_DISTRO: ubuntu1804
-      MOLECULE_PLAYBOOK: playbook-version.yml
+ This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use Travis because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
 
-install:
-  # Install test dependencies.
-  - pip install molecule docker
-
-before_script:
-  # Use actual Ansible Galaxy role name for the project directory.
-  - cd ../
-  - mv ansible-role-$ROLE_NAME geerlingguy.$ROLE_NAME
-  - cd geerlingguy.$ROLE_NAME
-
-script:
-  # Run tests.
-  - molecule test
-
-notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
-
- This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use Travis because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into ZUUL as the Ansible Network Software Team uses this to drive their CI however it would require I stand up a server.
-
- I'm going to add this to the repo and create a follow up blog on this subject in the future.
+ I'm going to CI this to the repo and create a follow up blog on this subject in the future.
 
 [black big]*Pre Commit Hooks*
 
 hooks are very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
-just incase someone tries to commit them by accident.
+just in case someone tries to commit them by accident.
 
 
 https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
@@ -118,15 +86,6 @@ https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker t
 https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint[yaml lint] is a yaml linter.
 
 https://github.com/awslabs/git-secrets[SecretsChecker] checks for accidental passwords or secrest left in the code your trying to commit.
-
-
-
-
-
-[black big]*Bots*
-
-
-
 
 
 
@@ -141,13 +100,6 @@ image:images/version.jpg[]
 image:images/example.jpg[]
 
 image:images/layout.jpg[]
-
-You can see below that I have added two new fields [purple]#IOS Version# & [purple]#Device Up Time#.
-
-image:images/fields.jpg[]
-
-If we take a look at a snippet of the record dictionary the ServiceNow API sends back, it now has the the two new fields.
-[purple]#"u_device_up_time"# & [purple]#"u_ios_version"#
 
 image:images/api.jpg[]
 
