@@ -20,7 +20,7 @@ endif::[]
 
 |===
 
-
+image:images/ansible.jpg[]
 
 [red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 4.*
 
@@ -42,10 +42,9 @@ Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflo
 
 [black big]*GitFlow*
 
-While I developed this role on my own I still wanted to hold myself to using Git collaboration best practices. I used the GitFlow workflow for all changes to the code. I created a [red]#devel# branch and worked in there for all my testing and additions to the codebase. Once I had something something new or a bug fix figured out and was happy with it, I created a Pull request against the [red]#master# branch. If you ever have a chance to contribute to the open-source Ansible project on GitHub you will follow the same processes of forking and creating pull requests.
+While I developed this role on my own I still wanted to hold myself to using Git collaboration best practices. I used the GitFlow workflow for all changes to the code. I created a [red]#devel# branch and worked in there for all my testing and additions to the codebase. Once I had something new or a bug fix figured out and was happy with it, I created a Pull request against the [red]#master# branch. If you ever have a chance to contribute to the open-source Ansible project on GitHub you will follow the same processes of forking and creating pull requests.
 
-Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting. When you are working on a code project with other people who are also contributing this flow becomes imperative. Learn this before
-worrying about CI with Travis, hooks,  or anything else.
+Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting. When you are working on a code project with other people who are also contributing this flow becomes imperative. Learn this before worrying about CI with Travis CI, hooks, or anything else.
 
 [black big]*One Role One Repo*
 
@@ -68,15 +67,15 @@ When you create a role using the [red]#ansible-galaxy init# command it will auto
 
 [black big]*Travis CI*
 
- I have been looking into adding some CI to this repo based on the repos of https://galaxy.ansible.com/api/v1/notifications/[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
+ I have been looking into adding some CI to this repo based on the repos of https://github.com/geerlingguy/ansible-role-firewall/blob/master/.travis.yml[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
 
- This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use Travis because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
+ This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use https://twitter.com/travisci[Travis CI] because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
 
- I'm going to CI this to the repo and create a follow up blog on this subject in the future.
+ I'm going to add CI to this the repo soon and create a follow up blog on this subject in the future.
 
 [black big]*Pre Commit Hooks*
 
-hooks are very valuable when you start to contribute to a repo with business rules and production code.
+Hooks are very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
 just in case someone tries to commit them by accident.
 
@@ -88,23 +87,6 @@ https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint[ya
 https://github.com/awslabs/git-secrets[SecretsChecker] checks for accidental passwords or secrest left in the code your trying to commit.
 
 
-
-
-[black big]*Multi vendor support*
-
-image:images/version.jpg[]
-
- are now parameters of [red]#system_facts#.
-
-
-image:images/example.jpg[]
-
-image:images/layout.jpg[]
-
-image:images/api.jpg[]
-
-We can use these new fields in the [red]#data# section of our [red]#snow_record module#.
-Here is a complete playbook that will run the show version command, parse the output and add the parameters into the new fields for us.
 
 
 [black big]*Stay tuned for more blogs where I will dig deeper into these individual subjects*
