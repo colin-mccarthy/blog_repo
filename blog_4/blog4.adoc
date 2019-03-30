@@ -1,0 +1,93 @@
+= {subject} [black]*Ansible For Network Engineers*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype: book
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+|===
+
+
+
+[red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 4.*
+
+Here are links to  https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow[Part 1]
+, https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part2[Part 2]
+, and https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3]
+
+This article is part four in a series covering the role Ansible can play in ticket automation.
+This time we'll cover creating and managing a reusable and scalable role.
+
+
+This blog post will cover my journey in creating and managing an open-source Ansible role for creating ServiceNow network tickets.
+The role can be found https://galaxy.ansible.com/colin_mccarthy/servicenow_network_tickets[here] on Galaxy.
+
+I will cover the tools and best practices I used while maintaining the https://github.com/colin-mccarthy/servicenow_network_tickets[GitHub] repo.
+
+Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
+
+
+
+[black big]*example.yml*
+
+image:images/version.jpg[]
+
+The parser takes the command output and creates a dictionary. The data points you want to use later in your playbook, are now parameters of [red]#system_facts#.
+
+
+image:images/example.jpg[]
+
+What I would like to do is add some fields in the ServiceNow change_request template, then add the version and uptime to every change request Ansible creates.
+
+In ServiceNow this is done under Configure > Form Layout.
+
+image:images/layout.jpg[]
+
+You can see below that I have added two new fields [purple]#IOS Version# & [purple]#Device Up Time#.
+
+image:images/fields.jpg[]
+
+If we take a look at a snippet of the record dictionary the ServiceNow API sends back, it now has the the two new fields.
+[purple]#"u_device_up_time"# & [purple]#"u_ios_version"#
+
+image:images/api.jpg[]
+
+We can use these new fields in the [red]#data# section of our [red]#snow_record module#.
+Here is a complete playbook that will run the show version command, parse the output and add the parameters into the new fields for us.
+
+image:images/play.jpg[]
+
+
+The new fields are now populated in our ServiceNow change request.
+
+image:images/ticketvars.jpg[]
+
+
+
+[black big]*If you're interested in learning more, stay tuned for Part 5 of this series. We will continue to build a framework for fully automating our network tickets.*
+
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - July 8 2018  -  Colin McCarthy
+|===

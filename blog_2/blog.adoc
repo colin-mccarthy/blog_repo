@@ -1,0 +1,86 @@
+= {subject} [black]*Ansible For Network Engineers*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype: book
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+|===
+
+
+
+[red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 2.*
+
+
+ Opening and closing tickets is a very common step in network operations. This article is part two in a series covering the role Ansible can play in ticket automation.
+ This time we'll cover handling incidents in ServiceNow and adding output to your tickets right from your routers and switches.
+
+You can see part one of this blog series here: https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow[Part 1]
+
+This blog will expand farther into the capabilities of the https://docs.ansible.com/ansible/2.5/modules/snow_record_module.html[snow_record module].
+In the playbook below, the [red]#table# parameter will determine what type of ticket will be opened ie.. change_request or incident etc...
+I have specified that at the top of the playbook under [red]#vars#.
+The show version task is using the http://docs.ansible.com/ansible/latest/modules/ios_command_module.html[ios_command module] to execute a command on a 3560 Cisco switch and storing the output as a variable named comments.
+This variable is then being used in the [red]#comments# parameter for our ServiceNow incident task.
+
+image:images/playbook.jpg[]
+
+In an effort to use best practices, this time the ServiceNow incident task in our playbook will use variables for all of the parameters.
+The variables can be included in our playbook or a separate vars file. I use both options in this scenario.
+Because I'm storing passwords in incident_vars.yml, a good practice would be to encrypt this file using https://docs.ansible.com/ansible/2.4/vault.html[Ansible Vault].
+
+[black big]*incident_vars.yml*
+
+image:images/secrets.jpg[]
+
+[black big]*Playbook run*
+
+image:images/run.jpg[]
+
+
+
+
+If you were to log into your instance of ServiceNow and view the incidents>all section.
+You should see your incident (INC0010029) at the top. You should notice that the short description has been filled out by our playbook task.
+[red]#(This is a test created by Ansible)#.
+
+
+image:images/dashboard.jpg[]
+
+You can see in the comments section the output from our show version command, notice the IOS version, model, as well as uptime of the device.
+You could run any command not just show version. I'm sure you can imagine what other data would be valuable to list inside your tickets.
+
+
+image:images/notes.jpg[]
+
+
+There is a lot of text from the show version command. Keep in mind, you can filter this output and only record the specific data points you want.
+This can be done with the https://github.com/ansible-network/network-engine[ansible-network.network-engine] role and custom parsers.
+
+[black big]*If your interested in learning more about parsers and the ansible-network.network-engine role. Stay tuned, I will go deeper into filtering the output in Part 3 of this series.*
+
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - May 28 2018  -  Colin McCarthy
+|===
