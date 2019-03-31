@@ -12,7 +12,7 @@ TheNetwork.Engineer
 :icons: font
 ifdef::backend-pdf[]
 :pdf-page-size: A4
-:source-highlighter: rouge
+:source-highlighter: coderay
 :rouge-style: github
 endif::[]
 
@@ -40,10 +40,10 @@ I will cover the tools and best practices I used while maintaining the https://g
 
 Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
 
-But first... let me show you my idea of how this role would be used in a production network.
+But first... let me show you my idea of how this role would be used in a production network. Lets review the four playbooks found in the examples folder [here]
 
-```
 
+image:images/logging.png[]
 
 
 [black big]*GitFlow*
@@ -85,7 +85,7 @@ Hooks are very valuable when you start to contribute to a repo with business rul
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
 just in case someone tries to commit them by accident.
 
-image:images/demo.gif[alt=demo,width=540,height=380]
+image:images/logging.gif[alt=demo,width=540,height=380]
 
 
 https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
