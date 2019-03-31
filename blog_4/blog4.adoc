@@ -39,7 +39,9 @@ I will cover the tools and best practices I used while maintaining the https://g
 
 Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
 
-But first... let me show you my idea of how this role would be used in a production network. Lets review the four playbooks found in the examples folder [here]
+But first... let me show you my idea of how this role would be used. Lets review the four playbooks found in the examples folder https://github.com/colin-mccarthy/servicenow_network_tickets/tree/master/examples[here].
+These four playbooks are designed for config compliance. They will add or remove any configs that don't match the intended state declared in the playbook.
+In a production network the declared state my live somewhere else like in a host vars file or perhaps you could use a CMDB like ServiceNow or Netbox as your source of truth.
 
 
 
@@ -87,6 +89,13 @@ But first... let me show you my idea of how this role would be used in a product
     import_role:
       name: servicenow_network_tickets
 ----
+
+This playbook was written in a way that it can function idempotent. On the first run the configs on the device do not match the state in the playbook.
+There are two extra logging servers configured on the switches. You can see the playbook find them and remove those configs, which triggers a ticket to be created for each switch.
+
+
+
+
 
 image:images/final.svg[]
 
