@@ -2,7 +2,7 @@
 TheNetwork.Engineer
 :subject:
 :description:
-:doctype: book
+:doctype:
 :confidentiality:
 :listing-caption: Listing
 :toc:
@@ -12,13 +12,12 @@ TheNetwork.Engineer
 :icons: font
 ifdef::backend-pdf[]
 :pdf-page-size: A4
-:source-highlighter: coderay
+:source-highlighter: rouge
 :rouge-style: github
 endif::[]
 
 
 
-|===
 
 image:images/ansible.jpg[]
 
@@ -43,7 +42,49 @@ Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflo
 But first... let me show you my idea of how this role would be used in a production network. Lets review the four playbooks found in the examples folder [here]
 
 
-image:images/logging.png[]
+
+[source,yaml]
+----
+---
+---
+- hosts: ios
+  gather_facts: no
+
+  vars:
+
+    log_servers:
+      - logging 8.8.8.8
+      - logging 8.8.4.4
+
+
+  tasks:
+
+  - name: RUN 'Set Logging'
+    ios_config:
+      commands: "{{ item }}"
+    loop: "{{ log_servers }}"
+    register: set_logging
+
+  - name: "GET CONFIG"
+    ios_command:
+      commands:
+        - show running-config full | include logging [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+
+    register: log
+
+  - debug: var=log.stdout_lines
+
+  - name: RUN 'Remove Logging'
+    ios_config:
+      commands: "no {{ item }}"
+    when:  "item not in log_servers"
+    loop: "{{ log.stdout_lines[0] }}"
+    register: remove_logging
+
+  - name: servicenow_network_tickets
+    when: set_logging.changed or remove_logging.changed
+    import_role:
+      name: servicenow_network_tickets
+----
 
 image:images/demo.svg[]
 
@@ -73,13 +114,14 @@ Ansible Galaxy uses this same system, every role can be downloaded or cloned sep
 When you create a role using the [red]#ansible-galaxy init# command it will automatically create a meta/main.yml file. This file is where you can list your role dependencies. In this case my role does require another role in order to function. If you read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you to network-engine.
 
 
-[black big]*Travis CI*
+[black big]*TravisCI*
 
- I have been looking into adding some CI to this repo based on the repos of https://github.com/geerlingguy/ansible-role-firewall/blob/master/.travis.yml[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
+I have been looking into adding some CI to this repo based on the repos of https://github.com/geerlingguy/ansible-role-firewall/blob/master/.travis.yml[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
 
- This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use https://twitter.com/travisci[Travis CI] because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
+This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use https://twitter.com/travisci[TravisCI] because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
 
- I'm going to add CI to this the repo soon and create a follow up blog on this subject in the future.
+I'm going to add CI to this the repo soon and create a follow up blog on this subject in the future.
+
 
 [black big]*Pre Commit Hooks*
 
