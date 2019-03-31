@@ -45,6 +45,8 @@ But first... let me show you my idea of how this role would be used in a product
 
 image:images/logging.png[]
 
+image:images/demo.svg[]
+
 
 [black big]*GitFlow*
 
@@ -85,7 +87,6 @@ Hooks are very valuable when you start to contribute to a repo with business rul
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
 just in case someone tries to commit them by accident.
 
-image:images/logging.gif[alt=demo,width=540,height=380]
 
 
 https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
