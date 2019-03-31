@@ -88,7 +88,7 @@ But first... let me show you my idea of how this role would be used in a product
       name: servicenow_network_tickets
 ----
 
-image:images/demo.svg[]
+image:images/final.svg[]
 
 
 [black big]*GitFlow*
