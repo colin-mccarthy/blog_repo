@@ -22,6 +22,7 @@ endif::[]
 
 image:images/ansible.jpg[]
 
+
 [red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 4.*
 
 Here are links to  https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow[Part 1]
@@ -38,6 +39,11 @@ The role can be found https://galaxy.ansible.com/colin_mccarthy/servicenow_netwo
 I will cover the tools and best practices I used while maintaining the https://github.com/colin-mccarthy/servicenow_network_tickets[GitHub] repo.
 
 Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
+
+But first... let me show you my idea of how this role would be used in a production network.
+
+```
+
 
 
 [black big]*GitFlow*
@@ -78,6 +84,8 @@ When you create a role using the [red]#ansible-galaxy init# command it will auto
 Hooks are very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
 just in case someone tries to commit them by accident.
+
+image:images/demo.gif[alt=demo,width=540,height=380]
 
 
 https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
