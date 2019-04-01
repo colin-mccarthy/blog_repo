@@ -100,7 +100,7 @@ However, if you watch the second run no configs needed to be added or removed, s
 
 
 
-image:images/final.svg[]
+image:images/asciicinema.gif[]
 
 
 [black big]*GitFlow*
