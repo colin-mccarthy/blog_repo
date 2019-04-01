@@ -44,7 +44,7 @@ Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflo
 
 But first... let me show you my idea of how this role would be used. Let's review one of the playbooks found in the examples folder https://github.com/colin-mccarthy/servicenow_network_tickets/tree/master/examples[here].
 These four playbooks are designed for config compliance. They will add or remove any configs that don't match the intended state declared in the playbook.
-In a production network the declared state my live somewhere else like in a host vars file or perhaps you could use a CMDB like ServiceNow or Netbox as your source of truth.
+In a production network the declared state may live somewhere else like in a host vars file or perhaps you could use a CMDB like ServiceNow or Netbox as your source of truth.
 
 
 
