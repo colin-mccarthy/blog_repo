@@ -35,7 +35,7 @@ This time we'll cover creating and managing a reusable and scalable role.
 This blog post will cover my journey in creating and managing an open-source Ansible role for creating ServiceNow network tickets.
 The role can be found https://galaxy.ansible.com/colin_mccarthy/servicenow_network_tickets[here] on Galaxy.
 
-This role is not a completed out of the box solution for network ticket. What it is meant to be is merely a starting point that accelerates your adoption of automating ServiceNow with Ansible.
+This role is not a completed out of the box solution for network ticketing. What it is meant to be is merely a starting point that accelerates your adoption of automating ServiceNow with Ansible.
 If you follow all four blog posts this will be the one that starts to introduce more developer tools. Feel free to send me pull requests if you want to contribute to growing this role.
 
 I will cover the tools and best practices I used while maintaining the https://github.com/colin-mccarthy/servicenow_network_tickets[GitHub] repo.
