@@ -127,7 +127,13 @@ Ansible Galaxy uses this same system, every role can be downloaded or cloned sep
 
 [black big]*Dependencies*
 
-When you create a role using the [red]#ansible-galaxy init# command it will automatically create a meta/main.yml file. This file is where you can list your role dependencies. In this case my role does require another role in order to function. If you read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you to network-engine.
+When you create a role using the [red]#ansible-galaxy init# command it will automatically create a meta/main.yml file. This file is
+where you can list your role dependencies. In this case my role does require another role in order to function. If you
+read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you
+to network-engine. There is no need to include a task to import the network-engine role as this is implied once you mention it in the meta/main.yml file.
+Because I use Ansible Tower for everything I just add a requirements.yml file to the roles directory where my playbooks live and Tower automatically
+runs the [red]#ansible-galaxy install -r roles/requirements.yml -p ./roles/ --force# command. You can find an example https://github.com/colin-mccarthy/ansible-playbooks-for-cisco-ios/blob/master/roles/requirements.yml[here].
+
 
 [source,yaml]
 ----
