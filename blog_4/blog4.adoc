@@ -209,9 +209,9 @@ I'm going to add CI to this the repo soon and create a follow up blog on this su
 
 https://pre-commit.com[pre-commit] is very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
-just in case someone tries to commit them by accident. If you set up a pre-commit hook that kicks off when you try to got commit it will save you from sending
-bad code to your repo It will save your CI from running and then blocking your commit. If you set up travis to use yamllint you could also set up a pre-Commit
-hook that also uses yamllint and then you should never submit code that gets rejected by your TravisCI This is another one of those developer tools that I really
+just in case someone tries to commit them by accident. If you set up a pre-commit hook that kicks off when you try to got commit, it will save you from sending
+bad code to your repo. It will also save your CI from running and then blocking your commit. If you set up Travis CI to use yaml-lint you could also set up a pre-commit
+hook that also uses yaml-lint and then you should never submit code that gets rejected by your Travis CI. This is another one of those developer tools that I really
 liked when I started looking into it.
 
 
