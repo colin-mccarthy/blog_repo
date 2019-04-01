@@ -110,7 +110,9 @@ all changes to the code. I created a [red]#devel# branch and worked in there for
 new or a bug fix figured out and was happy with it, I created a Pull request against the [red]#master# branch. If you ever have a chance to contribute to
 the open-source Ansible project on GitHub you will follow the same process of forking and creating pull requests.
 
-Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting. When you are working on a code project with other people who are also contributing this flow becomes imperative. Learn this before worrying about CI with Travis CI, hooks, or anything else.
+Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting.
+When you are working on a code project with other people who are also contributing this flow becomes imperative.
+Learn this before worrying about Travis CI, hooks, or anything else.
 
 
 
@@ -205,9 +207,13 @@ I'm going to add CI to this the repo soon and create a follow up blog on this su
 
 [black big]*Pre Commit Hooks*
 
-Hooks are very valuable when you start to contribute to a repo with business rules and production code.
+https://pre-commit.com[pre-commit] is very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
-just in case someone tries to commit them by accident.
+just in case someone tries to commit them by accident. If you set up a pre-commit hook that kicks off when you try to got commit it will save you from sending
+bad code to your repo It will save your CI from running and then blocking your commit. If you set up travis to use yamllint you could also set up a pre-Commit
+hook that also uses yamllint and then you should never submit code that gets rejected by your TravisCI This is another one of those developer tools that I really
+liked when I started looking into it.
+
 
 
 
