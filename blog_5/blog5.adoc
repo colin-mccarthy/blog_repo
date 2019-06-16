@@ -22,25 +22,15 @@ endif::[]
 image:images/ansible.jpg[]
 
 
-[red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 4.*
+[red big]*Using PyATS and Genie with Ansible*
 
-Here are links to  https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow[Part 1]
-, https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part2[Part 2]
-, and https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3]
+Cisco has released two Python3 libraries that are very useful for network automation. This blog will cover
+using the parsers that are made available in the Genie library. We will do that by calling a role in our playbook by the name parse_genie
 
-This article is part four in a series covering the role Ansible can play in ticket automation.
-This time we'll cover creating and managing a reusable and scalable role.
+The role can be found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
 
+This role was graciously created by @ccurtis584[Clay Curtis]
 
-This blog post will cover my journey in creating and managing an open-source Ansible role for creating ServiceNow network tickets.
-The role can be found https://galaxy.ansible.com/colin_mccarthy/servicenow_network_tickets[here] on Galaxy.
-
-This role is not a completed out of the box solution for network ticketing. What it is meant to be is merely a starting point that accelerates your adoption of automating ServiceNow with Ansible.
-If you follow all four blog posts this will be the one that starts to introduce more developer tools. Feel free to send me pull requests if you want to contribute to growing this role.
-
-I will cover the tools and best practices I used while maintaining the https://github.com/colin-mccarthy/servicenow_network_tickets[GitHub] repo.
-
-Including the https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow[GitFlow] process for making changes to the role and merging between dev and master branches.
 
 But first... let me show you my idea of how this role would be used. Let's review one of the playbooks found in the examples folder https://github.com/colin-mccarthy/servicenow_network_tickets/tree/master/examples[here].
 These five playbooks are designed for config compliance. They will add or remove any configs that don't match the intended state declared in the playbook.

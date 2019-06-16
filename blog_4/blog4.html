@@ -477,7 +477,7 @@ If you follow all four blog posts this will be the one that starts to introduce 
 </div>
 <div class="paragraph">
 <p>But first&#8230;&#8203; let me show you my idea of how this role would be used. Let&#8217;s review one of the playbooks found in the examples folder <a href="https://github.com/colin-mccarthy/servicenow_network_tickets/tree/master/examples">here</a>.
-These four playbooks are designed for config compliance. They will add or remove any configs that don&#8217;t match the intended state declared in the playbook.
+These five playbooks are designed for config compliance. They will add or remove any configs that don&#8217;t match the intended state declared in the playbook.
 In a production network the declared state may live somewhere else like in a host vars file or perhaps you could use a CMDB like ServiceNow or Netbox as your source of truth.</p>
 </div>
 <div class="listingblock">
@@ -520,7 +520,7 @@ In a production network the declared state may live somewhere else like in a hos
 
 
   - name: servicenow_network_tickets
-    when: set_snmp.changed or remove_snmp.changed
+    when: set_logging.changed or remove_logging.changed
     import_role:
       name: servicenow_network_tickets</code></pre>
 </div>
@@ -651,8 +651,8 @@ dependencies:
 <p><a href="https://pre-commit.com">pre-commit</a> is very valuable when you start to contribute to a repo with business rules and production code.
 A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
 just in case someone tries to commit them by accident. If you set up a pre-commit hook that kicks off when you try to git commit, it will save you from sending
-bad code to your repo. It will also save your CI from running and then blocking your commit. If you set up Travis CI to use yaml-lint you could also set up a pre-commit
-hook that also uses yaml-lint and then you should never submit code that gets rejected by your Travis CI. This is another one of those developer tools that I really
+bad code to your repo. It will also save your CI from running and then blocking your commit. If you set up Travis CI to use yaml-lint you could set up a pre-commit
+hook on your local system that also uses yaml-lint and then you should never submit code that gets rejected by your Travis CI. This is another one of those developer tools that I really
 liked when I started looking into it.</p>
 </div>
 <div class="paragraph">
@@ -679,7 +679,7 @@ liked when I started looking into it.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-03-31 22:57:23 -0400
+Last updated 2019-04-01 08:32:40 -0400
 </div>
 </div>
 </body>

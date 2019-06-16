@@ -1,0 +1,143 @@
+= {subject} [black]*Ansible For Network Engineers*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype:
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+
+[red big]*Utilize Ansible for opening and closing tickets with ServiceNow - Part 2.*
+
+This article is part two in a series covering the role Red Hat Ansible Automation can play in ticket automation. This time we’ll cover dynamically adding a set of facts to your tickets right from your routers and switches.
+
+You can see part one of this blog series here: Part 1
+
+Imagine there was a certain software version scattered around your network that was always causing you problems and making your uptime SLA suffer. How would you convince your management to finance an upgrade project? How would you justify to them that would be the fix and well worth the cost? Better yet how would you even know?
+
+A great start would be having metrics you could track. The ability to data mine against your tickets and prove just how many tickets were involved in gear on that software. In this blog I’ll show you how to automate adding a set of facts to all of you tickets going forward. Indisputable facts that were pulled directly from the device with no chance for any mistakes or accidentally being overlooked and not created.
+
+
+This can be done with the ansible-network.network-engine role and custom parsers.
+
+
+We can filter device output and only record the specific data points we choose. This can be done with the ansible-network.network-engine role and custom parsers. In this blog we are going to use this specific parser show_version.yaml from the network-engine github repo.
+
+
+The first thing we will need to do in our playbook is call the ansible-network.network-engine role.
+
+
+
+----
+
+---
+- name: parser example
+  hosts: ios
+  gather_facts: no
+  connection: network_cli
+  roles:
+    - ansible-network.network-engine
+
+----
+
+Next the show version task is using the ios_command module to execute a command on a 3560 Cisco switch and storing the output as a variable named version.
+
+
+  tasks:
+  - name: show version
+    ios_command:
+      commands:
+         - show version
+    register: version
+
+
+It’s then being parsed with a custom parser template (show_version.yaml) written in YAML, using the command_parser module that network-engine allows us to use.
+
+The parser takes the command output and creates a dictionary. The data points you want to use later in your playbook, are now parameters of [red]#system_facts#.
+
+I know the name of the dictionary is system_facts, because on line 48 (The Bottom) of show_version.yaml you can find the name of the dictionary.
+
+----
+  - name: parse show version
+    command_parser:
+      file: "parsers/show_version.yaml"
+      content: "{{ version.stdout.0 }}
+
+
+  - debug: var=system_facts
+
+----
+
+
+
+
+
+
+
+
+
+
+[black big]*playbook*
+
+
+----
+---
+- name: parser example
+  hosts: ios
+  gather_facts: no
+  connection: network_cli
+  roles:
+    - ansible-network.network-engine
+
+
+  tasks:
+  - name: show version
+    ios_command:
+      commands:
+         - show version
+    register: version
+
+  - name: parse show version
+    command_parser:
+      file: "parsers/show_version.yml"
+      content: "{{ version.stdout.0 }}
+
+
+  - debug: var=system_facts
+
+----
+
+
+
+[black big]*Playbook run*
+
+
+
+
+What I would like to do is add some fields in the ServiceNow change_request template, then add the version and uptime to every change request Ansible creates.
+
+In ServiceNow this is done under Configure > Form Layout.
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - May 28 2018  -  Colin McCarthy
+|===
