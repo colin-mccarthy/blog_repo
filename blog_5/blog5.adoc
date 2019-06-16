@@ -22,78 +22,68 @@ endif::[]
 image:images/ansible.jpg[]
 
 
-[red big]*Using PyATS and Genie with Ansible*
+[red big]*Using pyATS and Genie with Ansible*
 
 Cisco has released two Python3 libraries that are very useful for network automation. This blog will cover
 using the parsers that are made available in the Genie library. We will do that by calling a role in our playbook by the name parse_genie
 
 The role can be found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
 
-This role was graciously created by @ccurtis584[Clay Curtis]
+This role was graciously created by Clay Curtis @ccurtis584
+
+This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie.
 
 
-But first... let me show you my idea of how this role would be used. Let's review one of the playbooks found in the examples folder https://github.com/colin-mccarthy/servicenow_network_tickets/tree/master/examples[here].
-These five playbooks are designed for config compliance. They will add or remove any configs that don't match the intended state declared in the playbook.
-In a production network the declared state may live somewhere else like in a host vars file or perhaps you could use a CMDB like ServiceNow or Netbox as your source of truth.
+pyATS Genie v19.5 has been released with 60 new parsers supporting IOS/IOSXE/XR/NXOS!
+It contains 1129 full parsers listed here...
+https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
+
+
+Let me show you my idea of how this role would be used.
+
+We need to evoke the role at the beginning of the playbook so we
+can use the filter plugin in a later play.
+
+We then need to execute show command and register the output to a variable.
+
+We can then run the text obtained via out show command through the filter plugin, it will then return to us structured data in JSON.
+We now can programmatically use our parsed data very easily.
+
 
 
 
 [source,yaml]
 ----
 ---
-- hosts: ios
+- name: pyats testing
+  hosts: ios
   gather_facts: no
-
-  vars:
-
-    log_servers:
-      - logging 8.8.8.8
-      - logging 8.8.4.4
-
+  connection: network_cli
+  roles:
+    - parse_genie
 
   tasks:
 
-  - name: get the current log server configs
+  - name: show interfaces
     ios_command:
       commands:
-        - show running-config full | include logging [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+
-    register: log
+        - show interfaces
+    register: interfaces
 
-  - debug: var=log.stdout_lines
+  - name: Set Fact Genie Filter
+    set_fact:
+      pyats_interfaces: "{{ interfaces['stdout'][0] | parse_genie(command='show interfaces', os='ios') }}"
 
-
-  - name: set logging commands
-    ios_config:
-      commands: "{{ item }}"
-    loop: "{{ log_servers }}"
-    register: set_logging
-
-
-  - name: remove logging commands
-    ios_config:
-      commands: "no {{ item }}"
-    when:  "item not in log_servers"
-    loop: "{{ log.stdout_lines[0] }}"
-    register: remove_logging
-
-
-  - name: servicenow_network_tickets
-    when: set_logging.changed or remove_logging.changed
-    import_role:
-      name: servicenow_network_tickets
+  - name: Debug Pyats facts
+    debug:
+     var: pyats_interfaces
 ----
-
-This playbook was written in a way that it can be idempotent. On the first run the configs on the device do not match the state in the playbook.
-There are two extra logging servers configured on the switches. You can see the playbook find them and remove those configs, which triggers a ticket to be created for each switch.
-
-However, if you watch the second run no configs needed to be added or removed, so all those tasks were skipped and the ticket role was not imported.
-
 
 
 image:images/asciicinema.gif[]
 
 
-[black big]*GitFlow*
+[black big]*Data Model*
 
 While I developed this role on my own I still wanted to hold myself to using Git collaboration best practices. I used the GitFlow workflow for
 all changes to the code. I created a [red]#devel# branch and worked in there for all my testing and additions to the codebase. Once I had something
@@ -106,117 +96,8 @@ Learn this before worrying about Travis CI, hooks, or anything else.
 
 
 
-[black big]*One Role One Repo*
 
-Utilizing the one role one repo thought process for scalability and compatibility with Galaxy.
-
-I am a firm believer you should store your roles in their own repo, I like to call this style One Role One Repo. I am often asked how to structure your Git repos when getting started with network automation so that you can easily scale and not have to make a bunch of changes later down the road. Some folks look at my strange when I advise them to structure their repos like this. They say well what if I we grow to having 1000 roles, we don't want to have 1000 repo’s. Yes you do actually!
-
-A great presentation on this subject was given by Sam Doran a Senior Software Dev at Ansible/Red Hat during AnsibleFest London 2017. I always recommend folks go and watch that if they want to understand how to scale. You can find that presentation recording https://www.ansible.com/running-ansible-at-scale[here]
-
-Every role should be documented, permissioned and shared on it’s own. What if you want to share your BGP roles with a certain department but they don’t need to see your OSPF and MPLS roles. How would you easily share those if they were all in the same repo.
-
-Ansible Galaxy uses this same system, every role can be downloaded or cloned separately. Hopefully you may have some roles that you wish to share with the community. Also when you start to maintain these roles with a CI/CD mindset and start using tools like https://www.zuul-ci.org[ZUUL]. It all makes sense why they should live in their own repo’s.
-
-
-
-[black big]*Dependencies*
-
-When you create a role using the [red]#ansible-galaxy init# command it will automatically create a meta/main.yml file. This file is
-where you can list your role dependencies. In this case my role does require another role in order to function. If you
-read https://www.thenetwork.engineer/blog/utilize-ansible-for-opening-and-closing-tickets-with-servicenow-part3[Part 3] I introduced you
-to network-engine. There is no need to include a task to import the network-engine role as this is implied once you mention it in the meta/main.yml file.
-Because I use Ansible Tower for everything I just add a requirements.yml file to the roles directory where my playbooks live and Tower automatically
-runs the [red]#ansible-galaxy install -r roles/requirements.yml -p ./roles/ --force# command. You can find an example https://github.com/colin-mccarthy/ansible-playbooks-for-cisco-ios/blob/master/roles/requirements.yml[here].
-
-
-[source,yaml]
-----
-
-galaxy_info:
-  author: Colin McCarthy
-  description: your description
-  company: Red Hat
-
-  # If the issue tracker for your role is not on github, uncomment the
-  # next line and provide a value
-  # issue_tracker_url: http://example.com/issue/tracker
-
-  # Some suggested licenses:
-  # - BSD (default)
-  # - MIT
-  # - GPLv2
-  # - GPLv3
-  # - Apache
-  # - CC-BY
-  license: license (GPLv2, CC-BY, etc)
-
-  min_ansible_version: 2.6
-
-  # If this a Container Enabled role, provide the minimum Ansible Container version.
-  # min_ansible_container_version:
-
-  # Optionally specify the branch Galaxy will use when accessing the GitHub
-  # repo for this role. During role install, if no tags are available,
-  # Galaxy will use this branch. During import Galaxy will access files on
-  # this branch. If Travis integration is configured, only notifications for this
-  # branch will be accepted. Otherwise, in all cases, the repo's default branch
-  # (usually master) will be used.
-  # github_branch:
-
-  #
-  # Provide a list of supported platforms, and for each platform a list of versions.
-  # If you don't wish to enumerate all versions for a particular platform, use 'all'.
-  # To view available platforms and versions (or releases), visit:
-  # https://galaxy.ansible.com/api/v1/platforms/
-  #
-
-  platforms:
-    - name: ios
-      version:
-        - any
-
-  galaxy_tags:
-    - network
-    - cisco
-    - ios
-
-dependencies:
-  - ansible-network.network-engine
-
-----
-
-[black big]*TravisCI*
-
-I have been looking into adding some CI to this repo based on the repos of https://github.com/geerlingguy/ansible-role-firewall/blob/master/.travis.yml[GeerlingGuy] and https://github.com/nickrusso42518/racc/blob/master/.travis.yml[Nick Russo].
-
-This is a tricky subject when dealing with Network Automation. What we are trying to accomplish can sometimes be harder to emulate and test. For instance trying to use CI/CD against a change to an Ansible playbook that modifies BGP neighbors can be a beast to reproduce in a test environment. It seems like the trend currently is to automate a linting test against the YAML and call it good. I decided to use https://twitter.com/travisci[TravisCI] because it is a cloud based SaaS model and does not require me to spin up and maintain a server. I have been looking into https://www.zuul-ci.org[ZUUL] as it uses Ansible playbooks to drive the CI however it would require I stand up a server. I didn't want to take on that kind of task right now but would like to try this out in the future hopefully.
-
-I'm going to add CI to this the repo soon and create a follow up blog on this subject.
-
-
-[black big]*Pre Commit Hooks*
-
-https://pre-commit.com[pre-commit] is very valuable when you start to contribute to a repo with business rules and production code.
-A great place to start is with linting your YAML and Ansible. Another great example is a hook that searches for secrets
-just in case someone tries to commit them by accident. If you set up a pre-commit hook that kicks off when you try to git commit, it will save you from sending
-bad code to your repo. It will also save your CI from running and then blocking your commit. If you set up Travis CI to use yaml-lint you could set up a pre-commit
-hook on your local system that also uses yaml-lint and then you should never submit code that gets rejected by your Travis CI. This is another one of those developer tools that I really
-liked when I started looking into it.
-
-
-
-
-https://docs.ansible.com/ansible-lint/[Ansible lint] is a command line checker tool.
-
-https://yamllint.readthedocs.io/en/stable/quickstart.html#installing-yamllint[yaml lint] is a yaml linter.
-
-https://github.com/awslabs/git-secrets[SecretsChecker] will scan for accidental passwords or secrets in the code your trying to commit.
-
-
-
-
-[black big]*Stay tuned for more blogs where I will dig deeper into these individual subjects*
+[black big]*Stay tuned for more blogs*
 
 
 
@@ -228,5 +109,5 @@ https://github.com/awslabs/git-secrets[SecretsChecker] will scan for accidental 
 |===
 
 |===
-TheNetwork.Engineer - March 31 2019  -  Colin McCarthy
+TheNetwork.Engineer - June 16 2019  -  Colin McCarthy
 |===
