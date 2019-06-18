@@ -19,35 +19,37 @@ endif::[]
 
 
 
-image:images/ansible.jpg[]
+
 
 
 [red big]*Using pyATS and Genie with Ansible*
 
-Cisco has released two Python3 libraries that are very useful for network automation. This blog will cover
-using the parsers that are made available in the Genie library. We will do that by calling a role in our playbook by the name parse_genie
+Cisco has released two Python3 libraries that are very useful for network automation pyATS & Genie. pyATS functions as a framework while genie builds on top of it, Genie can be used to parse, learn, and diff.
+This blog will cover using the parsers that are made available in the Genie library. We will do that by calling a role in our playbook by the name parse_genie.
 
 The role can be found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
 
 This role was graciously created by Clay Curtis @ccurtis584
 
-This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie.
+image:images/clay.jpg[]
+
+This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.
 
 
-pyATS Genie v19.5 has been released with 60 new parsers supporting IOS/IOSXE/XR/NXOS!
+pyATS | Genie v19.5 has been released with 60 new parsers supporting IOS/IOSXE/XR/NXOS!
 It contains 1129 full parsers listed here...
 https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
 
 
 Let me show you my idea of how this role would be used.
 
-We need to evoke the role at the beginning of the playbook so we
-can use the filter plugin in a later play.
+We need to invoke the role at the beginning of the playbook so we
+can use the filter plugin in a later task.
 
 We then need to execute show command and register the output to a variable.
 
-We can then run the text obtained via out show command through the filter plugin, it will then return to us structured data in JSON.
-We now can programmatically use our parsed data very easily.
+Now run the text obtained via out show command through the filter plugin, it will then return to us structured data in JSON.
+We can programmatically use our parsed data very easily.
 
 
 
@@ -55,7 +57,7 @@ We now can programmatically use our parsed data very easily.
 [source,yaml]
 ----
 ---
-- name: pyats testing
+- name: pyATS testing
   hosts: ios
   gather_facts: no
   connection: network_cli
@@ -64,35 +66,36 @@ We now can programmatically use our parsed data very easily.
 
   tasks:
 
-  - name: show interfaces
+  - name: Run the show version command
     ios_command:
       commands:
-        - show interfaces
-    register: interfaces
+        - show version
+    register: version
 
-  - name: Set Fact Genie Filter
+  - name: Set fact with Genie filter plugin
     set_fact:
-      pyats_interfaces: "{{ interfaces['stdout'][0] | parse_genie(command='show interfaces', os='ios') }}"
+      pyats_version: "{{ version['stdout'][0] | parse_genie(command='show version', os='ios') }}"
 
-  - name: Debug Pyats facts
+  - name: Debug pyATS facts - all
     debug:
-     var: pyats_interfaces
+     var: pyats_version.version
+
+  - name: Debug pyATS facts - version
+    debug:
+     var: pyats_version.version.version
+
+  - name: Debug pyATS facts - uptime
+    debug:
+     var: pyats_version.version.uptime
 ----
 
 
-image:images/asciicinema.gif[]
+image:images/demo.gif[]
 
 
 [black big]*Data Model*
 
-While I developed this role on my own I still wanted to hold myself to using Git collaboration best practices. I used the GitFlow workflow for
-all changes to the code. I created a [red]#devel# branch and worked in there for all my testing and additions to the codebase. Once I had something
-new or a bug fix figured out and was happy with it, I created a Pull request against the [red]#master# branch. If you ever have a chance to contribute to
-the open-source Ansible project on GitHub you will follow the same process of forking and creating pull requests.
 
-Learning this flow is the most important things you can do to embrace and benefit from these developer tools our field is moving towards adopting.
-When you are working on a code project with other people who are also contributing this flow becomes imperative.
-Learn this before worrying about Travis CI, hooks, or anything else.
 
 
 

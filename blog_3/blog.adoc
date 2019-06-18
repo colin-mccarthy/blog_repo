@@ -2,7 +2,7 @@
 TheNetwork.Engineer
 :subject:
 :description:
-:doctype: book
+:doctype:
 :confidentiality:
 :listing-caption: Listing
 :toc:
@@ -16,9 +16,6 @@ ifdef::backend-pdf[]
 :rouge-style: github
 endif::[]
 
-
-
-|===
 
 
 
@@ -46,9 +43,32 @@ On line 48 of show_version.yaml you can find the name of the dictionary we need 
 
 image:images/system_facts.jpg[]
 
-[black big]*example.yml*
+To test this out we can run this playbook.
 
-image:images/version.jpg[]
+[source,yaml]
+----
+---
+- name: parser example
+  hosts: ios
+  gather_facts: no
+  connection: network_cli
+  roles:
+    - ansible-network.network-engine
+
+  tasks:
+  - name: show version
+    ios_command:
+      commands:
+        - show version
+    register: version
+
+  - name: parse show version
+    command_parser:
+      file: "parsers/show_version.yaml"
+      content: "{{ version.stdout.0 }}"
+
+  - debug: var=system_facts
+----
 
 The parser takes the command output and creates a dictionary. The data points you want to use later in your playbook, are now parameters of [red]#system_facts#.
 
@@ -73,7 +93,50 @@ image:images/api.jpg[]
 We can use these new fields in the [red]#data# section of our [red]#snow_record module#.
 Here is a complete playbook that will run the show version command, parse the output and add the parameters into the new fields for us.
 
-image:images/play.jpg[]
+Now lets try the example.yml playbook with all of our tasks.
+
+[black big]*example.yml*
+[source,yaml]
+----
+---
+- name: create ticket with notes
+  hosts: ios
+  gather_facts: no
+  connection: network_cli
+  roles:
+    - ansible-network.network-engine
+
+  tasks:
+  - name: include vars
+    include_vars: incident_vars.yml
+
+  - name: show version
+    ios_command:
+      commands:
+        - show version
+    register: version
+
+  - name: parse show version
+    command_parser:
+      file: "parsers/show_version.yaml"
+      content: "{{ version.stdout.0 }}"
+
+  - name: create an incident
+    snow_record:
+      state: present
+      table: incident
+      username: "{{ sn_username }}"
+      password: "{{ sn_password }}"
+      instance: "{{ sn_instance }}"
+      data:
+        priority: "{{ sn_priority}}"
+        u_device_up_time: "{{ system_facts.uptime }}"
+        u_ios_version: "{{ system_facts.version }}"
+        short_description: "This ticket was created by Ansible"
+    register: new_incident
+
+  - debug: var=new_incident.record
+----
 
 
 The new fields are now populated in our ServiceNow change request.
