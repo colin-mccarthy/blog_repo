@@ -24,33 +24,46 @@ endif::[]
 
 [red big]*Using pyATS and Genie with Ansible*
 
-Cisco has released two Python3 libraries that are very useful for network automation pyATS & Genie. pyATS functions as a framework while genie builds on top of it, Genie can be used to parse, learn, and diff.
-This blog will cover using the parsers that are made available in the Genie library. We will do that by calling a role in our playbook by the name parse_genie.
 
-The role can be found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
+[black big]*pyATS and Genie*
 
-This role was graciously created by Clay Curtis @ccurtis584
-
-image:images/clay.jpg[]
-
-This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.
+Cisco has released two Python3 packages that are very useful for network automation - pyATS & Genie. The first one, pyATS functions as a framework while Genie builds on top of it. Genie can be used to parse, learn, and diff.
+This blog will cover using the parsers that are made available in the Genie package. We will do this by calling a Galaxy role in our playbook named parse_genie.
 
 
-pyATS | Genie v19.5 has been released with 60 new parsers supporting IOS/IOSXE/XR/NXOS!
-It contains 1129 full parsers listed here...
+
+This role was created by Clay Curtis @ccurtis584 and can be
+found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
+
+image:images/clay.jpg[alt=clay,width=480,height=380]
+
+
+Cisco is activley releasing new versions of the Genie package with more and more parsers.
+
+image:images/genie.jpg[alt=genie,width=480,height=380]
+
+Here is a list of the current parsers available in Genie...
+
 https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
 
+
+[black big]*Using the parse_genie filter plugin*
 
 Let me show you my idea of how this role would be used.
 
 We need to invoke the role at the beginning of the playbook so we
 can use the filter plugin in a later task.
 
-We then need to execute show command and register the output to a variable.
 
-Now run the text obtained via out show command through the filter plugin, it will then return to us structured data in JSON.
-We can programmatically use our parsed data very easily.
+Don't forget to check out the dependencies...
+This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.
 
+
+With our first task we execute a show version command and register the output to a variable.
+
+Next we filter the text obtained via our show command through the parse_genie filter plugin, we now have structured data in JSON format.
+We can programmatically use our parsed data very easily when it's structured like this.
+As an example I am debug-ing single facts like version and uptime.
 
 
 
@@ -93,7 +106,17 @@ We can programmatically use our parsed data very easily.
 image:images/demo.gif[]
 
 
-[black big]*Data Model*
+[black big]*Final thoughts*
+
+I am pretty excited to have access to all of these pre-written parsers in Ansible now.
+The Genie parsers use OS-agnostic data models. As this project continues to grow and folks contribute
+parsers for other vendors we should not have to adjust our playbooks.
+
+You may consider replacing the [red]#ios# in the filter plugin to use [red]#ansible_network_os# variable that was introduced with
+the network_cli connection plugin. That way you could run against nxos, ios, junos, etc.. all in the same inventory and playbook run.
+
+
+
 
 
 
