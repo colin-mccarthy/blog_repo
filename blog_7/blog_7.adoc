@@ -1,0 +1,161 @@
+= {subject} [black]*Ansible For Network Engineers*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype:
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+
+image:images/IMG_0516.jpeg[]
+
+
+[red big]*Network Function as a Service*
+
+
+[black big]*OpenFaaS*
+
+OpenFaaS Blah Blah...
+
+This role was created by Clay Curtis @ccurtis584 and can be
+found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
+
+image:images/k8s.jpg[alt=clay,width=480,height=380]
+
+
+Cisco is activley releasing new versions of the Genie package with more and more parsers.
+
+image:images/genie.jpg[alt=genie,width=480,height=380]
+
+Here is a list of the current parsers available in Genie...
+
+https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
+
+
+[black big]*Using the parse_genie filter plugin*
+
+Let me show you my idea of how this role would be used.
+
+We need to invoke the role at the beginning of the playbook so we
+can use the filter plugin in a later task.
+
+
+Don't forget to check out the dependencies...
+This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.
+
+
+With our first task we execute a show version command and register the output to a variable.
+
+Next we filter the text obtained via our show command through the parse_genie filter plugin, we now have structured data in JSON format.
+We can programmatically use our parsed data very easily when it's structured like this.
+As an example I am debug-ing single facts like version and uptime.
+
+
+
+[source,yaml]
+----
+FROM openfaas/classic-watchdog:0.13.4 as watchdog
+
+FROM cmccarth/alpine-snow:latest
+
+USER root
+
+RUN mkdir -p /app
+
+COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
+RUN chmod +x /usr/bin/fwatchdog
+
+
+
+# Add non root user
+RUN addgroup -S app && adduser app -S -G app
+RUN chown app /home/app
+
+WORKDIR /home/app
+
+USER app
+
+RUN git clone https://github.com/colin-mccarthy/env_vars
+WORKDIR /home/app/env_vars
+
+
+ENV fprocess="ansible-playbook create_ticket.yml -i hosts"
+
+
+# Set to true to see request in function logs
+ENV write_debug="false"
+
+
+
+EXPOSE 8080
+EXPOSE 31112
+EXPOSE 22
+
+
+HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
+
+CMD ["fwatchdog"]
+
+
+ENV read_timeout="120"
+ENV write_timeout="120"
+----
+
+
+
+
+image:images/invoke_function.jpeg[]
+
+This is a fun project myself and a friend Luke Short worked on a while back to add the ability to use ENV vars with the snow_record module it can be
+found https://github.com/colin-mccarthy/servicenow_demo/tree/env_vars[here] on GitHub.
+
+[black big]*Automation*
+
+image:images/trap.jpeg[]
+
+
+
+
+[black big]*Final thoughts*
+
+I am pretty excited to have access to all of these pre-written parsers in Ansible now.
+The Genie parsers use OS-agnostic data models. As this project continues to grow and folks contribute
+parsers for other vendors we should not have to adjust our playbooks.
+
+You may consider replacing the [red]#ios# in the filter plugin to use [red]#ansible_network_os# variable that was introduced with
+the network_cli connection plugin. That way you could run against nxos, ios, junos, etc.. all in the same inventory and playbook run.
+
+
+
+
+
+
+
+
+
+[black big]*Stay tuned for more blogs*
+
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - Aug 03 2019  -  Colin McCarthy
+|===

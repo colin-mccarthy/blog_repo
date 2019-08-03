@@ -1,0 +1,110 @@
+= {subject} [black]*Ansible For Network Engineers*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype:
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+
+[red big]*Installing Ansible Tower*
+
+
+[black big]*Download the latest release*
+
+----
+curl -k -O https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
+----
+
+
+[black big]*Extract the Tarball*
+
+----
+gunzip ansible-tower-setup-latest.tar.gz
+----
+
+----
+tar xvf ansible-tower-setup-latest.tar
+----
+
+Ansible Tower gets installed with an Ansible playbook. You will need to configure the inventory file with the hostnames or IP addresses of the servers in the cluster.
+In the example I will be using one server and defining it as localhost. In the case you want to have multiple nodes in the cluster you define them
+under the [tower] section and if you want a separate Postgres database, you can define that hostname or IP under the [database] section.
+
+----
+cd ansible-tower-setup-3.5.0-1
+----
+
+----
+vi inventory
+----
+
+----
+[tower]
+localhost ansible_connection=local
+
+[database]
+
+[all:vars]
+admin_password='Redhat123!'
+
+pg_host=''
+pg_port=''
+
+pg_database='awx'
+pg_username='awx'
+pg_password='Redhat123!'
+
+rabbitmq_username=tower
+rabbitmq_password='Redhat123!'
+rabbitmq_cookie=cookiemonster
+
+# Isolated Tower nodes automatically generate an RSA key for authentication;
+# To disable this behavior, set this value to false
+# isolated_key_generation=true
+----
+
+
+
+
+[black big]*Run the setup.sh script*
+
+----
+./setup.sh
+----
+
+
+[black big]*Check if the Tower GUI is reachable in your browser*
+
+
+
+http:// <Ansible Tower IP or Hostname>
+
+|===
+
+[black big]*Stay tuned for more blogs*
+
+
+
+
+
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - June 23 2019  -  Colin McCarthy
+|===
