@@ -1,4 +1,4 @@
-= {subject} [black]*Ansible For Network Engineers*
+= {subject} [black]*Ansible Functions as a Service for Network Automation*
 TheNetwork.Engineer
 :subject:
 :description:
@@ -22,45 +22,46 @@ endif::[]
 image:images/IMG_0516.jpeg[]
 
 
-[red big]*Network Function as a Service*
+
 
 
 [black big]*OpenFaaS*
 
-OpenFaaS Blah Blah...
+I built a Raspberry Pi cluster and decided to look into getting OpenFaaS
+running on it.
 
-This role was created by Clay Curtis @ccurtis584 and can be
-found https://galaxy.ansible.com/clay584/parse_genie[here] on Galaxy.
+OpenFaaS let's you build and deploy server-less functions, which I think of as small containers that can scale to zero.
+They have a listener that is on standby ready for you to trigger the function via the API or from the OpenFaaS GUI.
+
+
+
+I made the decision to also stand up a Kubernetes cluster for OpenFaaS to run on.
+
+
+
+
 
 image:images/k8s.jpg[alt=clay,width=480,height=380]
 
-
-Cisco is activley releasing new versions of the Genie package with more and more parsers.
-
-image:images/genie.jpg[alt=genie,width=480,height=380]
-
-Here is a list of the current parsers available in Genie...
-
-https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
+[red]#*If I was starting over I would stand up K3s by Rancher Labs, not the full Kubernetes install.#
 
 
-[black big]*Using the parse_genie filter plugin*
-
-Let me show you my idea of how this role would be used.
-
-We need to invoke the role at the beginning of the playbook so we
-can use the filter plugin in a later task.
+If your interested in going that route there is a new blog that Alex Ellis has written for using [red]#K3s# that can be
+found https://blog.alexellis.io/test-drive-k3s-on-raspberry-pi/[here].
 
 
-Don't forget to check out the dependencies...
-This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.
+
+After I got Kubernetes working and got OpenFaaS stood up I decided to create a function that would use Ansible to open a ServiceNow ticket.
+I tried a few different ways including a [red]#Python3 template# and then eventually settled on using a [red]#Dockerfile template#.
+The Dockerfile I used is below. Now I'm also sourcing the container from a custom Docker image that I made named [red]#alpine-snow#
+which has Ansible and the [red]#pysnow# Python library installed.
 
 
-With our first task we execute a show version command and register the output to a variable.
 
-Next we filter the text obtained via our show command through the parse_genie filter plugin, we now have structured data in JSON format.
-We can programmatically use our parsed data very easily when it's structured like this.
-As an example I am debug-ing single facts like version and uptime.
+
+[black big]*The Ticketing Function That I built*
+
+
 
 
 
@@ -76,6 +77,12 @@ RUN mkdir -p /app
 
 COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
 RUN chmod +x /usr/bin/fwatchdog
+
+# Add SNOW ENV vars
+ENV SN_USERNAME "admin"
+ENV SN_PASSWORD "omitted"
+ENV SN_INSTANCE "omitted"
+
 
 
 
@@ -116,27 +123,58 @@ ENV write_timeout="120"
 
 
 
+
+
+[red]#*The Ansible module being used is a fun project myself and a friend Luke Short worked on a while back to add the ability to use
+ENV vars with the snow_record module.#
+
+
+It can be found https://github.com/colin-mccarthy/env_vars[here] on GitHub.
+
+[black big]*The OpenFaaS GUI*
+
+Here you can see a successful execution of my function from the OpenFaaS GUI.
+
 image:images/invoke_function.jpeg[]
 
-This is a fun project myself and a friend Luke Short worked on a while back to add the ability to use ENV vars with the snow_record module it can be
-found https://github.com/colin-mccarthy/servicenow_demo/tree/env_vars[here] on GitHub.
+
+
 
 [black big]*Automation*
 
+Once I tested my function in the OpenFaaS GUI and saw that it was working it was time to automate the ticket creation.
+I stood up Zabbix an open source network monitoring tool in a Docker container and built a trigger and an action. The trigger is setup to alarm if my Cisco 3560 switch
+reboots. The action will curl the OpenFaaS function running on my Raspberry Pi cluster and should use Ansible to create a ticket in my free ServiceNow developers instance.
+
+
+
 image:images/trap.jpeg[]
 
+This was fairly easy as I just added a curl command to the Zabbix alarm [red]#curl http:/ /192.168.161.101:31112/function/ticket-function#
+This worked fine to prove out my minimal solution but I plan to take it further and add the host into the curl when I revisit this project.
+That way the ticket can include some device specific info and probably use some of the pyATS playbooks I have blogged about before to gather facts.
+That may be better for other types of alarms where the device doesn't lose connectivity.
 
+
+
+
+image:images/ticket.jpeg[]
 
 
 [black big]*Final thoughts*
 
-I am pretty excited to have access to all of these pre-written parsers in Ansible now.
-The Genie parsers use OS-agnostic data models. As this project continues to grow and folks contribute
-parsers for other vendors we should not have to adjust our playbooks.
 
-You may consider replacing the [red]#ios# in the filter plugin to use [red]#ansible_network_os# variable that was introduced with
-the network_cli connection plugin. That way you could run against nxos, ios, junos, etc.. all in the same inventory and playbook run.
 
+
+
+
+image:images/size.jpeg[]
+
+You can see the size of my alpine-snow container compared to a typical alpine container. I think it would be fun to try and see how small I could get this and still have it function.
+I have considered creating a smaller version of Ansible by removing all of the modules in the Library directory.
+As well as any other plugins and what not that I'm not going to be using.
+It's funny because while I was working on this Ansible announced a move to using collections, which sort of aligns with what I was thinking about.
+Remove a number of the modules for the main Ansible package and have people only install the collections they want.
 
 
 
@@ -157,5 +195,5 @@ the network_cli connection plugin. That way you could run against nxos, ios, jun
 |===
 
 |===
-TheNetwork.Engineer - Aug 03 2019  -  Colin McCarthy
+TheNetwork.Engineer - Aug 15 2019  -  Colin McCarthy
 |===
