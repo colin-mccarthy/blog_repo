@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.3">
 <meta name="description" content="">
 <meta name="author" content="TheNetwork.Engineer">
-<title>Ansible For Network Engineers</title>
+<title>Ansible Functions as a Service for Network Automation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -440,112 +440,150 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="">
 <div id="header">
-<h1> <strong class="black">Ansible For Network Engineers</strong></h1>
+<h1> <strong class="black">Ansible Functions as a Service for Network Automation</strong></h1>
 <div class="details">
 <span id="author" class="author">TheNetwork.Engineer</span><br>
 </div>
 </div>
 <div id="content">
 <div class="paragraph">
-<p><strong class="red big">Using pyATS and Genie with Ansible</strong></p>
+<p><span class="image"><img src="images/IMG_0516.jpeg" alt="IMG 0516"></span></p>
 </div>
 <div class="paragraph">
-<p><strong class="black big">pyATS and Genie</strong></p>
+<p><strong class="black big">OpenFaaS</strong></p>
 </div>
 <div class="paragraph">
-<p>Cisco has released two Python3 packages that are very useful for network automation - pyATS &amp; Genie. The first one, pyATS functions as a framework while Genie builds on top of it. Genie can be used to parse, learn, and diff.
-This blog will cover using the parsers that are made available in the Genie package. We will do this by calling a Galaxy role in our playbook named parse_genie.</p>
+<p>I built a Raspberry Pi cluster and decided to look into getting OpenFaaS
+running on it.</p>
 </div>
 <div class="paragraph">
-<p>This role was created by Clay Curtis @ccurtis584 and is available on Ansible Galaxy.
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Parse Genie is available for use now. Ansible filter plugin for parsing network CLI with <a href="https://twitter.com/Cisco?ref_src=twsrc%5Etfw">@Cisco</a> <a href="https://twitter.com/hashtag/Genie?src=hash&amp;ref_src=twsrc%5Etfw">#Genie</a> and <a href="https://twitter.com/hashtag/pyATS?src=hash&amp;ref_src=twsrc%5Etfw">#pyATS</a>. Didn&#39;t make it into Ansible core, so published to <a href="https://twitter.com/CiscoDevNet?ref_src=twsrc%5Etfw">@CiscoDevNet</a> <a href="https://twitter.com/hashtag/CodeExchange?src=hash&amp;ref_src=twsrc%5Etfw">#CodeExchange</a> and Galaxy instead. <a href="https://twitter.com/hashtag/NetDevOps?src=hash&amp;ref_src=twsrc%5Etfw">#NetDevOps</a> <a href="https://twitter.com/hashtag/DevNet?src=hash&amp;ref_src=twsrc%5Etfw">#DevNet</a><a href="https://t.co/yfVCOWO9o7">https://t.co/yfVCOWO9o7</a><a href="https://t.co/sMPtPSbSmK">https://t.co/sMPtPSbSmK</a></p>&mdash; Clay Curtis (@ccurtis584) <a href="https://twitter.com/ccurtis584/status/1132434639413489664?ref_src=twsrc%5Etfw">May 25, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>OpenFaaS let&#8217;s you build and deploy server-less functions, which I think of as small containers that can scale to zero.
+They have a listener that is on standby ready for you to trigger the function via the API or from the OpenFaaS GUI.</p>
 </div>
 <div class="paragraph">
+<p>I made the decision to also stand up a Kubernetes cluster for OpenFaaS to run on.</p>
+</div>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Was up pretty late getting these OpenFaas pods working. I learned that Tiller and Flannel don&#39;t always work very well on ARM systems. But hey... There is no better way to learn <a href="https://twitter.com/hashtag/K8s?src=hash&amp;ref_src=twsrc%5Etfw">#K8s</a> than to have to troubleshoot crashed pods. <a href="https://t.co/EAJRsl1Mwz">pic.twitter.com/EAJRsl1Mwz</a></p>&mdash; Colin McCarthy (@Colinnation) <a href="https://twitter.com/Colinnation/status/1148216933935996929?ref_src=twsrc%5Etfw">July 8, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<div class="paragraph">
+<p><span class="red">*If I was starting over I would stand up K3s by Rancher Labs, not the full Kubernetes install.</span></p>
+</div>
+<div class="paragraph">
+<p>If your interested in going that route there is a blog that Alex Ellis has written for using K3s that can be found here...
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Will it cluster? k3s (&lt; k8s) on your Raspberry Pi <a href="https://twitter.com/Raspberry_Pi?ref_src=twsrc%5Etfw">@Raspberry_Pi</a> - <a href="https://t.co/8yA0msz4aW">https://t.co/8yA0msz4aW</a> <a href="https://twitter.com/hashtag/kubernetes?src=hash&amp;ref_src=twsrc%5Etfw">#kubernetes</a> <a href="https://twitter.com/hashtag/rancher?src=hash&amp;ref_src=twsrc%5Etfw">#rancher</a> <a href="https://twitter.com/hashtag/rpi?src=hash&amp;ref_src=twsrc%5Etfw">#rpi</a> <a href="https://twitter.com/hashtag/cluster?src=hash&amp;ref_src=twsrc%5Etfw">#cluster</a> <a href="https://twitter.com/hashtag/billofmaterials?src=hash&amp;ref_src=twsrc%5Etfw">#billofmaterials</a> <a href="https://twitter.com/hashtag/tutorial?src=hash&amp;ref_src=twsrc%5Etfw">#tutorial</a></p>&mdash; Alex Ellis (@alexellisuk) <a href="https://twitter.com/alexellisuk/status/1105501856476868609?ref_src=twsrc%5Etfw">March 12, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 </div>
 <div class="paragraph">
-<p>Cisco is activley releasing new versions of the Genie package with more and more parsers.</p>
+<p>After I got Kubernetes working and got OpenFaaS stood up I decided to create a function that would use Ansible to open a ServiceNow ticket.
+I tried a few different ways including a <span class="red">Python3 template</span> and then eventually settled on using a <span class="red">Dockerfile template</span>.
+The Dockerfile I used is below. Now I&#8217;m also sourcing the container from a custom Docker image that I made named <span class="red">alpine-snow</span>
+which has Ansible and the <span class="red">pysnow</span> Python library installed.</p>
 </div>
 <div class="paragraph">
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/pyATS?src=hash&amp;ref_src=twsrc%5Etfw">#pyATS</a> Genie v19.5 has been released with 60 new parsers supporting IOS/IOSXE/XR/NXOS! Take a look here: <a href="https://t.co/D5tvpwWsQm">https://t.co/D5tvpwWsQm</a> 1129 full parsers waiting for your automation need! <a href="https://t.co/6eJQR6TetU">https://t.co/6eJQR6TetU</a></p>&mdash; JB (@jeaubin5) <a href="https://twitter.com/jeaubin5/status/1136800850376925184?ref_src=twsrc%5Etfw">June 7, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-<div class="paragraph">
-<p>Here is a list of the current parsers available in Genie&#8230;&#8203;</p>
-</div>
-<div class="paragraph">
-<p><a href="https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers" class="bare">https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers</a></p>
-</div>
-<div class="paragraph">
-<p><strong class="black big">Using the parse_genie filter plugin</strong></p>
-</div>
-<div class="paragraph">
-<p>Let me show you my idea of how this role would be used.</p>
-</div>
-<div class="paragraph">
-<p>We need to invoke the role at the beginning of the playbook so we
-can use the filter plugin in a later task.</p>
-</div>
-<div class="paragraph">
-<p>Don&#8217;t forget to check out the dependencies&#8230;&#8203;
-This plugin will require Python 3.4+ and you need to pip install the pyATS and Genie packages as well.</p>
-</div>
-<div class="paragraph">
-<p>With our first task we execute a show version command and register the output to a variable.</p>
-</div>
-<div class="paragraph">
-<p>Next we filter the text obtained via our show command through the parse_genie filter plugin, we now have structured data in JSON format.
-We can programmatically use our parsed data very easily when it&#8217;s structured like this.
-As an example I am debug-ing single facts like version and uptime.</p>
+<p><strong class="black big">The Ticketing Function That I built</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">---
-- name: pyATS testing
-  hosts: ios
-  gather_facts: no
-  connection: network_cli
-  roles:
-    - parse_genie
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">FROM openfaas/classic-watchdog:0.13.4 as watchdog
 
-  tasks:
+FROM cmccarth/alpine-snow:latest
 
-  - name: Run the show version command
-    ios_command:
-      commands:
-        - show version
-    register: version
+USER root
 
-  - name: Set fact with Genie filter plugin
-    set_fact:
-      pyats_version: "{{ version['stdout'][0] | parse_genie(command='show version', os='ios') }}"
+RUN mkdir -p /app
 
-  - name: Debug pyATS facts - all
-    debug:
-     var: pyats_version.version
+COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
+RUN chmod +x /usr/bin/fwatchdog
 
-  - name: Debug pyATS facts - version
-    debug:
-     var: pyats_version.version.version
+# Add SNOW ENV vars
+ENV SN_USERNAME "admin"
+ENV SN_PASSWORD "omitted"
+ENV SN_INSTANCE "omitted"
 
-  - name: Debug pyATS facts - uptime
-    debug:
-     var: pyats_version.version.uptime</code></pre>
+
+
+
+# Add non root user
+RUN addgroup -S app &amp;&amp; adduser app -S -G app
+RUN chown app /home/app
+
+WORKDIR /home/app
+
+USER app
+
+RUN git clone https://github.com/colin-mccarthy/env_vars
+WORKDIR /home/app/env_vars
+
+
+ENV fprocess="ansible-playbook create_ticket.yml -i hosts"
+
+
+# Set to true to see request in function logs
+ENV write_debug="false"
+
+
+
+EXPOSE 8080
+EXPOSE 31112
+EXPOSE 22
+
+
+HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
+
+CMD ["fwatchdog"]
+
+
+ENV read_timeout="120"
+ENV write_timeout="120"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="images/demo.gif" alt="demo"></span></p>
+<p><span class="red">*The Ansible module being used is a fun project myself and a friend Luke Short worked on a while back to add the ability to use
+ENV vars with the snow_record module.</span></p>
+</div>
+<div class="paragraph">
+<p>It can be found <a href="https://github.com/colin-mccarthy/env_vars">here</a> on GitHub.</p>
+</div>
+<div class="paragraph">
+<p><strong class="black big">The OpenFaaS GUI</strong></p>
+</div>
+<div class="paragraph">
+<p>Here you can see a successful execution of my function from the OpenFaaS GUI.</p>
+</div>
+<div class="paragraph">
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Having fun with <a href="https://twitter.com/hashtag/openfaas?src=hash&amp;ref_src=twsrc%5Etfw">#openfaas</a> functions on <a href="https://twitter.com/hashtag/k8s?src=hash&amp;ref_src=twsrc%5Etfw">#k8s</a> and <a href="https://twitter.com/hashtag/RaspberrPi?src=hash&amp;ref_src=twsrc%5Etfw">#RaspberrPi</a> <a href="https://t.co/qXIsvisOE4">pic.twitter.com/qXIsvisOE4</a></p>&mdash; Colin McCarthy (@Colinnation) <a href="https://twitter.com/Colinnation/status/1151232633227161601?ref_src=twsrc%5Etfw">July 16, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<div class="paragraph">
+<p><strong class="black big">Automation</strong></p>
+</div>
+<div class="paragraph">
+<p>Once I tested my function in the OpenFaaS GUI and saw that it was working it was time to automate the ticket creation.
+I stood up Zabbix an open source network monitoring tool in a Docker container and built a trigger and an action. The trigger is setup to alarm if my Cisco 3560 switch
+reboots. The action will curl the OpenFaaS function running on my Raspberry Pi cluster and should use Ansible to create a ticket in my free ServiceNow developers instance.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/trap.jpeg" alt="trap"></span></p>
+</div>
+<div class="paragraph">
+<p>This was fairly easy as I just added a curl command to the Zabbix alarm <span class="red">curl http:/ /192.168.161.101:31112/function/ticket-function</span>
+This worked fine to prove out my minimal solution but I plan to take it further and add the host into the curl when I revisit this project.
+That way the ticket can include some device specific info and probably use some of the pyATS playbooks I have blogged about before to gather facts.
+That may be better for other types of alarms where the device doesn&#8217;t lose connectivity.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/ticket.jpeg" alt="ticket"></span></p>
 </div>
 <div class="paragraph">
 <p><strong class="black big">Final thoughts</strong></p>
 </div>
 <div class="paragraph">
-<p>I am pretty excited to have access to all of these pre-written parsers in Ansible now.
-The Genie parsers use OS-agnostic data models. As this project continues to grow and folks contribute
-parsers for other vendors we should not have to adjust our playbooks.</p>
+<p><span class="image"><img src="images/size.jpeg" alt="size"></span></p>
 </div>
 <div class="paragraph">
-<p>You may consider replacing the <span class="red">ios</span> in the filter plugin to use <span class="red">ansible_network_os</span> variable that was introduced with
-the network_cli connection plugin. That way you could run against nxos, ios, junos, etc.. all in the same inventory and playbook run.</p>
+<p>You can see the size of my alpine-snow container compared to a typical alpine container. I think it would be fun to try and see how small I could get this and still have it function.
+I have considered creating a smaller version of Ansible by removing all of the modules in the Library directory.
+As well as any other plugins and what not that I&#8217;m not going to be using.
+It&#8217;s funny because while I was working on this Ansible announced a move to using collections, which sort of aligns with what I was thinking about.
+Remove a number of the modules for the main Ansible package and have people only install the collections they want.</p>
 </div>
 <div class="paragraph">
 <p><strong class="black big">Stay tuned for more blogs</strong></p>
@@ -555,14 +593,14 @@ the network_cli connection plugin. That way you could run against nxos, ios, jun
 <table class="tableblock frame-all grid-all stretch">
 </table>
 <div class="paragraph">
-<p>TheNetwork.Engineer - June 16 2019  -  Colin McCarthy</p>
+<p>TheNetwork.Engineer - Aug 15 2019  -  Colin McCarthy</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 </table>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-06-18 13:04:49 -0400
+Last updated 2019-08-16 02:53:07 UTC
 </div>
 </div>
 </body>
