@@ -1,0 +1,109 @@
+= {subject} [black]*GitHub Actions with Ansible Lint*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype:
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+
+
+
+
+
+
+
+[black big]*GitHub Actions*
+
+Github actions recently came out. I was using Ansible-lint to lint my playbooks.
+
+
+
+
+
+
+
+
+
+[red]#*The Ansible module being used is a fun project myself and a friend Luke Short worked on a while back to add the ability to use
+ENV vars with the snow_record module.#
+
+
+
+
+
+
+image:images/failed.jpeg[]
+
+
+
+[black big]*The action code*
+
+```
+workflow "Ansible Lint" {
+ on = "pull_request"
+ resolves = ["Lint Ansible Playbook"]
+}
+
+action "Lint Ansible Playbook" {
+  uses = "ansible/ansible-lint-action@v4.1.0"
+}
+```
+
+
+[black big]*Automation*
+
+
+image:images/workflow.jpeg[]
+
+
+
+
+
+I received an email notification as well
+
+image:images/email.jpeg[]
+
+
+[black big]*Final thoughts*
+
+
+
+
+
+
+image:images/size.jpeg[]
+
+
+
+
+
+
+
+
+[black big]*Stay tuned for more blogs*
+
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - SEP 25 2019  -  Colin McCarthy
+|===

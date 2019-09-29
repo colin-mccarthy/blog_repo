@@ -457,7 +457,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 running on it.</p>
 </div>
 <div class="paragraph">
-<p>OpenFaaS let&#8217;s you build and deploy server-less functions, which I think of as small containers that can scale to zero.
+<p><span class="image"><img src="images/openfaas.jpeg" alt="size"></span></p>
+</div>
+<div class="paragraph">
+<p>OpenFaaS let&#8217;s you build and deploy serverless functions, which I think of as small containers that can scale to zero.
 They have a listener that is on standby ready for you to trigger the function via the API or from the OpenFaaS GUI.</p>
 </div>
 <div class="paragraph">
@@ -465,19 +468,36 @@ They have a listener that is on standby ready for you to trigger the function vi
 </div>
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Was up pretty late getting these OpenFaas pods working. I learned that Tiller and Flannel don&#39;t always work very well on ARM systems. But hey... There is no better way to learn <a href="https://twitter.com/hashtag/K8s?src=hash&amp;ref_src=twsrc%5Etfw">#K8s</a> than to have to troubleshoot crashed pods. <a href="https://t.co/EAJRsl1Mwz">pic.twitter.com/EAJRsl1Mwz</a></p>&mdash; Colin McCarthy (@Colinnation) <a href="https://twitter.com/Colinnation/status/1148216933935996929?ref_src=twsrc%5Etfw">July 8, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <div class="paragraph">
-<p><span class="red">*If I was starting over I would stand up K3s by Rancher Labs, not the full Kubernetes install.</span></p>
+<p><span class="red">*If I was starting over I would go with the more lightweight K3s by Rancher Labs over Kubeadm.</span></p>
 </div>
 <div class="paragraph">
-<p>If your interested in going that route there is a blog that Alex Ellis has written for using K3s that can be found here...
+<p>If you're interested in going that route there is a blog that Alex Ellis has written for using K3s that can be found here...
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Will it cluster? k3s (&lt; k8s) on your Raspberry Pi <a href="https://twitter.com/Raspberry_Pi?ref_src=twsrc%5Etfw">@Raspberry_Pi</a> - <a href="https://t.co/8yA0msz4aW">https://t.co/8yA0msz4aW</a> <a href="https://twitter.com/hashtag/kubernetes?src=hash&amp;ref_src=twsrc%5Etfw">#kubernetes</a> <a href="https://twitter.com/hashtag/rancher?src=hash&amp;ref_src=twsrc%5Etfw">#rancher</a> <a href="https://twitter.com/hashtag/rpi?src=hash&amp;ref_src=twsrc%5Etfw">#rpi</a> <a href="https://twitter.com/hashtag/cluster?src=hash&amp;ref_src=twsrc%5Etfw">#cluster</a> <a href="https://twitter.com/hashtag/billofmaterials?src=hash&amp;ref_src=twsrc%5Etfw">#billofmaterials</a> <a href="https://twitter.com/hashtag/tutorial?src=hash&amp;ref_src=twsrc%5Etfw">#tutorial</a></p>&mdash; Alex Ellis (@alexellisuk) <a href="https://twitter.com/alexellisuk/status/1105501856476868609?ref_src=twsrc%5Etfw">March 12, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 </div>
 <div class="paragraph">
+<p><strong class="black big">Using OpenFaaS Templates</strong></p>
+</div>
+<div class="paragraph">
 <p>After I got Kubernetes working and got OpenFaaS stood up I decided to create a function that would use Ansible to open a ServiceNow ticket.
-I tried a few different ways including a <span class="red">Python3 template</span> and then eventually settled on using a <span class="red">Dockerfile template</span>.
+OpenFaaS has a collection of templates you can pick from to create your functions.
+I tried a few different ways and eventually settled on using a <span class="red">Dockerfile template</span>.
+I have plans to also try out some Netmiko functions via the <span class="red">Python3 template</span> and also some Nornir functions.
+Stay tuned for those in another upcoming blog post about auto-remediation with functions.
+</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/templates.jpeg" alt="size"></span></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/openfaas/templates" class="bare">https://github.com/openfaas/templates</a></p>
+</div>
+<div class="paragraph">
+<p>
 The Dockerfile I used is below. Now I&#8217;m also sourcing the container from a custom Docker image that I made named <span class="red">alpine-snow</span>
-which has Ansible and the <span class="red">pysnow</span> Python library installed.</p>
+which has Ansible and the <span class="red">pysnow</span> Python library installed. I pushed this up to Dockerhub and OpenFaaS grabbed it from there. After the first time the image is pulled
+down it's available locally after that. Doing this saved me from having to pull down Ansible during the actual function, which frankly would have taken a long time on my Raspberry Pi cluster.</p>
 </div>
 <div class="paragraph">
 <p><strong class="black big">The Ticketing Function That I built</strong></p>
@@ -564,8 +584,15 @@ reboots. The action will curl the OpenFaaS function running on my Raspberry Pi c
 <p><span class="image"><img src="images/trap.jpeg" alt="trap"></span></p>
 </div>
 <div class="paragraph">
-<p>This was fairly easy as I just added a curl command to the Zabbix alarm <span class="red">curl http:/ /192.168.161.101:31112/function/ticket-function</span>
-This worked fine to prove out my minimal solution but I plan to take it further and add the host into the curl when I revisit this project.
+<p>This was fairly easy as I just added a curl command to the Zabbix alarm
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl http://192.168.161.101:31112/function/ticket-function</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This worked fine to prove out my minimal solution but I plan to take it further and add the host into the curl when I revisit this project.
 That way the ticket can include some device specific info and probably use some of the pyATS playbooks I have blogged about before to gather facts.
 That may be better for other types of alarms where the device doesn&#8217;t lose connectivity.</p>
 </div>
@@ -586,6 +613,15 @@ It&#8217;s funny because while I was working on this Ansible announced a move to
 Remove a number of the modules for the main Ansible package and have people only install the collections they want.</p>
 </div>
 <div class="paragraph">
+<p>If you're interested in building a similar Raspberry Pi cluster the case was purchased on Amazon from C4Labs.
+</p>
+</div>
+<div class="paragraph">
+<p>I found this project to be very informative and fun.
+I learned about Containers, Docker, DockerHub, Kubernetes, K3s, and OpenFaaS, all of which were subjects I hadn't spent much time on before.
+</p>
+</div>
+<div class="paragraph">
 <p><strong class="black big">Stay tuned for more blogs</strong></p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -593,14 +629,14 @@ Remove a number of the modules for the main Ansible package and have people only
 <table class="tableblock frame-all grid-all stretch">
 </table>
 <div class="paragraph">
-<p>TheNetwork.Engineer - Aug 15 2019  -  Colin McCarthy</p>
+<p>TheNetwork.Engineer - Aug 26 2019  -  Colin McCarthy</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 </table>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-08-16 02:53:07 UTC
+Last updated 2019-08-30
 </div>
 </div>
 </body>
