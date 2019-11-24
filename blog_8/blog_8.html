@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.3">
 <meta name="description" content="">
 <meta name="author" content="TheNetwork.Engineer">
-<title>GitHub Actions with Ansible Lint</title>
+<title>Ansible Linting with GitHub Actions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -440,17 +440,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="">
 <div id="header">
-<h1> <strong class="black">GitHub Actions with Ansible Lint</strong></h1>
+<h1> <strong class="black">Ansible Linting with GitHub Actions</strong></h1>
 <div class="details">
 <span id="author" class="author">TheNetwork.Engineer</span><br>
 </div>
 </div>
 <div id="content">
 <div class="paragraph">
+<p><strong class="black big">Ansible-lint</strong></p>
+</div>
+<div class="paragraph">
+<p>Ansible-lint is an open-source project that lints your Ansible code. The Docs state
+that it checks playbooks for practices and behavior that could potentially be improved.
+It can be installed with pip and run manually on single playbooks or set up in a pre-commit hook and ran when you attempt a
+commit on your repo from the CLI.</p>
+</div>
+<div class="paragraph">
+<p>The project can be found under the Ansible org on GitHub.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/ansible/ansible-lint" class="bare">https://github.com/ansible/ansible-lint</a></p>
+</div>
+<div class="paragraph">
 <p><strong class="black big">GitHub Actions</strong></p>
 </div>
 <div class="paragraph">
+<p>GitHub Market place</p>
+</div>
+<div class="paragraph">
 <p>Github actions recently came out. I was using Ansible-lint to lint my playbooks.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/marketplace/actions/ansible-lint" class="bare">https://github.com/marketplace/actions/ansible-lint</a></p>
 </div>
 <div class="paragraph">
 <p><span class="red">*The Ansible module being used is a fun project myself and a friend Luke Short worked on a while back to add the ability to use
@@ -487,10 +508,29 @@ action "Lint Ansible Playbook" {
 <p><span class="image"><img src="images/email.jpeg" alt="email"></span></p>
 </div>
 <div class="paragraph">
+<p><strong class="black big">Pre Commit hooks</strong></p>
+</div>
+<div class="paragraph">
+<p><a href="https://pre-commit.com" class="bare">https://pre-commit.com</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>pip install pre-commit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>make sure you&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>pre-commit install</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong class="black big">Final thoughts</strong></p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="images/size.jpeg" alt="size"></span></p>
+<p>This is a great way to get started with CI if you are using GitHub as your flavor of SCM.</p>
 </div>
 <div class="paragraph">
 <p><strong class="black big">Stay tuned for more blogs</strong></p>
@@ -500,12 +540,14 @@ action "Lint Ansible Playbook" {
 <table class="tableblock frame-all grid-all stretch">
 </table>
 <div class="paragraph">
-<p>TheNetwork.Engineer - SEP 25 2019  -  Colin McCarthy</p>
+<p>TheNetwork.Engineer - Nov 24 2019  -  Colin McCarthy</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+</table>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-11-24 21:55:44 UTC
+Last updated 2019-11-24 22:33:12 UTC
 </div>
 </div>
 </body>
