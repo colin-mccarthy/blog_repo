@@ -106,4 +106,3 @@ image:images/size.jpeg[]
 
 |===
 TheNetwork.Engineer - SEP 25 2019  -  Colin McCarthy
-|===
