@@ -1,4 +1,4 @@
-= {subject} [black]*GitHub Actions with Ansible Lint*
+= {subject} [black]*Ansible Linting with GitHub Actions*
 TheNetwork.Engineer
 :subject:
 :description:
@@ -25,12 +25,27 @@ endif::[]
 
 
 
+[black big]*Ansible-lint*
+
+Ansible-lint is an open-source project that lints your Ansible code. The Docs state
+that it checks playbooks for practices and behavior that could potentially be improved.
+It can be installed with pip and run manually on single playbooks or set up in a pre-commit hook and ran when you attempt a
+commit on your repo from the CLI.
+
+
+The project can be found under the Ansible org on GitHub.
+
+https://github.com/ansible/ansible-lint
+
+
+
 [black big]*GitHub Actions*
+
+GitHub Market place
 
 Github actions recently came out. I was using Ansible-lint to lint my playbooks.
 
-
-
+https://github.com/marketplace/actions/ansible-lint
 
 
 
@@ -77,14 +92,33 @@ I received an email notification as well
 image:images/email.jpeg[]
 
 
+
+
+[black big]*Pre Commit hooks*
+
+
+
+
+https://pre-commit.com
+
+```
+pip install pre-commit
+```
+
+make sure you...
+```
+pre-commit install
+```
+
 [black big]*Final thoughts*
 
 
+This is a great way to get started with CI if you are using GitHub as your flavor of SCM.
 
 
 
 
-image:images/size.jpeg[]
+
 
 
 
@@ -105,4 +139,5 @@ image:images/size.jpeg[]
 |===
 
 |===
-TheNetwork.Engineer - SEP 25 2019  -  Colin McCarthy
+TheNetwork.Engineer - SEP 29 2019  -  Colin McCarthy
+|===
