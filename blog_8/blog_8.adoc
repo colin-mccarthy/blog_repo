@@ -48,7 +48,7 @@ One day I was on Twitter and noticed an Ansible-lint action was created by Stefa
 
 It can be found here on GitHub's actions marketplace.
 
-https://github.com/marketplace/actions/ansible-lint
+https://github.com/marketplace/actions/ansible-lint?version=v4.1.0
 
 
 
@@ -82,7 +82,15 @@ image:images/email.jpeg[]
 
 
 
-[black big]*The action code*
+[black big]*Setting it up*
+
+
+To use the action simply create an ansible-lint.yml (or choose custom *.yml name) in the [red]#.github/workflows/# directory.
+
+
+
+
+
 
 ```
 workflow "Ansible Lint" {
@@ -95,8 +103,12 @@ action "Lint Ansible Playbook" {
 }
 ```
 
+You can run the action on various events:
 
-[black big]*Automation*
+```
+on = "push, pull_request"
+```
+
 
 
 image:images/workflow.jpeg[]
