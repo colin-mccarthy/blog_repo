@@ -41,19 +41,30 @@ https://github.com/ansible/ansible-lint
 
 [black big]*GitHub Actions*
 
-GitHub Market place
+GitHub Actions enables you to create custom workflows directly in your GitHub repository.
 
-Github actions recently came out. I was using Ansible-lint to lint my playbooks.
+One day I was on Twitter and noticed an Ansible-lint action was created by Stefan Stölzle.
+
+
+It can be found here on GitHub's actions marketplace.
 
 https://github.com/marketplace/actions/ansible-lint
 
 
 
+[black big]*My Ansible network repo*
+
+Let me  show you an example of what this would look like in production.
+Here I have a repo that has some Ansible playbooks for converting CSV files into  Cisco commands.
+There are some ASA firewall rules and some BGP peering commands etc..
+
+https://github.com/colin-mccarthy/ansible_csv
+
+I attempted to submit a pull request to make a change to one of the playbooks. The Ansible-lint Action kicked off
+and eventually detected an issue and returned a failed message, the pull request did not get successfully submitted.
 
 
 
-[red]#*The Ansible module being used is a fun project myself and a friend Luke Short worked on a while back to add the ability to use
-ENV vars with the snow_record module.#
 
 
 
@@ -61,6 +72,13 @@ ENV vars with the snow_record module.#
 
 
 image:images/failed.jpeg[]
+
+I received an email notification as well, letting me know it had failed.
+
+
+image:images/email.jpeg[]
+
+
 
 
 
@@ -87,25 +105,31 @@ image:images/workflow.jpeg[]
 
 
 
-I received an email notification as well
 
-image:images/email.jpeg[]
 
 
 
 
 [black big]*Pre Commit hooks*
 
+I would like to go a little deeper into linting by bringing up pre-commit hooks.
 
-
+Pre-commit hooks are little scripts ran locally on your machine, that can help identify issues before submission for code review.
+So when talking about the Ansible-lint action, it would really come in handy to lint the code before you submit your pull request.
+This would make sure you always pass. The GitHub action would just serve as the final step that guards the shared repo.
+If your using pre-commit hooks you should hypothetically never fail the gitHub action test.
 
 https://pre-commit.com
+
+To set this up on my MacBook I simply did a pip install.
+
 
 ```
 pip install pre-commit
 ```
+To set it up on your repo just make sure you...
 
-make sure you...
+
 ```
 pre-commit install
 ```
@@ -113,21 +137,10 @@ pre-commit install
 [black big]*Final thoughts*
 
 
-This is a great way to get started with CI if you are using GitHub as your flavor of SCM.
+This is a great way to get started with Actions if you are using GitHub as your flavor of SCM.
 
 
 
-
-
-
-
-
-
-
-
-
-
-[black big]*Stay tuned for more blogs*
 
 
 
