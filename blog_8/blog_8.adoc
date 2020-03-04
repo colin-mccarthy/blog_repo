@@ -146,8 +146,6 @@ To set it up on your repo just make sure you...
 pre-commit install
 ```
 
-image:images/lint.gif[]
-
 
 
 
