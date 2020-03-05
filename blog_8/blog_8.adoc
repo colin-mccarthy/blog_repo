@@ -48,7 +48,7 @@ One day I was on Twitter and noticed an Ansible-lint action was created by Stefa
 
 It can be found here on GitHub's actions marketplace.
 
-https://github.com/marketplace/actions/ansible-lint?version=v4.1.0
+https://github.com/marketplace/actions/ansible-lint
 
 
 
