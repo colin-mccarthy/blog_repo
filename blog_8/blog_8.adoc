@@ -190,10 +190,12 @@ pre-commit install
 
 
 
-[black big]*Final thoughts*
+[black big]*Markdown badge*
 
+You can get a badge for your repo to show if it is passing the linting test.
 
-This is a great way to get started with Actions if you are using GitHub as your flavor of SCM.
+image:images/badge.jpeg[]
+
 
 
 
