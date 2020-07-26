@@ -1,0 +1,104 @@
+= {subject} [black]*Ansible Container Groups*
+TheNetwork.Engineer
+:subject:
+:description:
+:doctype:
+:confidentiality:
+:listing-caption: Listing
+:toc:
+:toclevels: 6
+:sectnums:
+:chapter-label:
+:icons: font
+ifdef::backend-pdf[]
+:pdf-page-size: A4
+:source-highlighter: rouge
+:rouge-style: github
+endif::[]
+
+
+
+
+
+
+
+
+
+
+[black big]*Ansible Tower Container groups*
+
+What are they?
+Serverless functions, Tower feature that runs a playbook on OpenShift/Kubernetes.
+
+
+[black big]*Ansible Runner*
+
+The project can be found under the Ansible org on GitHub.
+
+https://github.com/ansible/ansible-runner
+
+
+[black big]*OpenShift Steps*
+
+Create a Project/NameSpace (ansible-tower)
+
+Create a ServiceAccount
+
+Create a Role (pod-manager)
+
+Create a RoleBinding
+
+
+
+[black big]*Ansible Tower Steps*
+
+Create the Credential
+
+```
+CREDENTIAL TYPE == OpenShift or Kubernetes API Bearer Token
+
+Copy stuff from the service account created in that project (User Management > Service Accounts > The one you made in the earlier steps)
+
+OPENSHIFT OR KUBERNETES API ENDPOINT (short version from oc login with https://api.foo.openshift.io:6443)
+
+API AUTHENTICATION BEARER TOKEN (can be used by itself without cert auth data, you don't need both)
+
+CERTIFICATE AUTHORITY DATA
+```
+
+Create the Container Group
+
+
+[black big]*Quay/Clair*
+
+Red Hat Quay - Container image registry
+
+Clair - Scanner
+
+image:images/quay.jpeg[640,480]
+
+
+
+
+
+
+[black big]*Final thoughts*
+
+
+This is a great way to get started with...
+
+
+
+
+
+
+
+|===
+|===
+
+
+|===
+
+|===
+TheNetwork.Engineer - July 26 2020  -  Colin McCarthy
+|===
