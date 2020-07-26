@@ -109,9 +109,10 @@ Make your own images:
 
 https://quay.io/repository/colin_mccarthy/ansible-runner
 
-Built by cloning ansible runner repo and then building from Dockerfile.dev
+Built by cloning ansible runner repo and then building from
+https://github.com/ansible/ansible-runner/blob/devel/Dockerfile.dev[Dockerfile.dev]
 
-https://github.com/ansible/ansible-runner/blob/devel/Dockerfile.dev
+
 
 
 
