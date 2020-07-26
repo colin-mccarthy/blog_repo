@@ -25,53 +25,124 @@ endif::[]
 
 
 
-[black big]*Ansible Tower Container groups*
+[red]*Ansible Tower Container groups*
 
 What are they?
 Serverless functions, Tower feature that runs a playbook on OpenShift/Kubernetes.
 
 
-[black big]*Ansible Runner*
+[red]*Ansible Runner*
 
 The project can be found under the Ansible org on GitHub.
 
 https://github.com/ansible/ansible-runner
 
 
-[black big]*OpenShift Steps*
+[red]*OpenShift Steps*
 
 Create a Project/NameSpace (ansible-tower)
 
+image:images/cred.png[640,480]
+
 Create a ServiceAccount
+
+image:images/cred.png[640,480]
 
 Create a Role (pod-manager)
 
+image:images/cred.png[640,480]
+
 Create a RoleBinding
 
+image:images/cred.png[640,480]
 
 
-[black big]*Ansible Tower Steps*
+
+[red]*Ansible Tower Steps*
 
 Create the Credential
 
+image:images/cred.png[640,480]
+
+
+[black]*CREDENTIAL TYPE* == OpenShift or Kubernetes API Bearer Token
+
+
+Copy stuff from the service account created in that project
+(User Management > Service Accounts > The one you made in the earlier steps)
+
+
+[black]*OPENSHIFT OR KUBERNETES API ENDPOINT*(short version from oc login with https://api.foo.openshift.io:6443)
+
+
+[black]*API AUTHENTICATION BEARER TOKEN* (can be used by itself without cert auth data, you don't need both)
+
+[black]*CERTIFICATE AUTHORITY DATA*
+
+[red]*Create the Container Group*
+
+add steps...
+
+[black]*Pod manifest*
+
 ```
-CREDENTIAL TYPE == OpenShift or Kubernetes API Bearer Token
-
-Copy stuff from the service account created in that project (User Management > Service Accounts > The one you made in the earlier steps)
-
-OPENSHIFT OR KUBERNETES API ENDPOINT (short version from oc login with https://api.foo.openshift.io:6443)
-
-API AUTHENTICATION BEARER TOKEN (can be used by itself without cert auth data, you don't need both)
-
-CERTIFICATE AUTHORITY DATA
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: ansible-tower
+spec:
+  containers:
+    - image: 'registry.redhat.io/ansible-tower-37/ansible-runner-rhel7'
+      tty: true
+      stdin: true
+      imagePullPolicy: IfNotPresent
+      args:
+        - sleep
+        - infinity
 ```
 
-Create the Container Group
+[red]*What about module dependencies?*
+
+Make your own images:
+
+[black]*Ansible Runner*
+
+https://quay.io/repository/colin_mccarthy/ansible-runner
+
+Built by cloning ansible runner repo and then building from Dockerfile.dev
+
+https://github.com/ansible/ansible-runner/blob/devel/Dockerfile.dev
 
 
-[black big]*Quay/Clair*
+
+
+
+[black]*Runner with pysnow package installed*
+
+https://quay.io/repository/colin_mccarthy/pysnow_pod
+
+
+[black]*Dockerfile*
+```
+FROM quay.io/colin_mccarthy/ansible-runner:stable_1.4.x
+
+# dependencies
+RUN pip3 install --no-cache-dir pysnow
+
+# required
+CMD ["ansible-runner", "run", "/runner"]
+```
+
+
+
+
+[red]*Quay/Clair*
 
 Red Hat Quay - Container image registry
+
+https://quay.io
+
+
 
 Clair - Scanner
 
@@ -82,7 +153,7 @@ image:images/quay.jpeg[640,480]
 
 
 
-[black big]*Final thoughts*
+[red]*Final thoughts*
 
 
 This is a great way to get started with...
