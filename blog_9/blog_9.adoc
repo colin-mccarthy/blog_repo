@@ -29,20 +29,20 @@ endif::[]
 
 
 
-[red]*Ansible Tower Container groups*
+[big red]*Ansible Tower Container groups*
 
 What are they?
 Serverless functions, Tower feature that runs a playbook on OpenShift/Kubernetes.
 
 
-[red]*Ansible Runner*
+[big red]*Ansible Runner*
 
 The project can be found under the Ansible org on GitHub.
 
 https://github.com/ansible/ansible-runner
 
 
-[red]*OpenShift Steps*
+[big red]*OpenShift Steps*
 
 [black]*1. Create a Project/Namespace in OpenShift named (ansible-tower).*
 
@@ -88,38 +88,42 @@ image:images/binding.png[640,480]
 
 
 
-[red]*Ansible Tower Steps*
+[big red]*Ansible Tower Steps*
 
-Create the Credential
+[big black]*1. Create the Credential*
 
 image:images/cred.png[640,480]
 
+[black]*CREDENTIAL TYPE*
 
-[black]*CREDENTIAL TYPE* == OpenShift or Kubernetes API Bearer Token
+Your OpenShift or Kubernetes API Bearer Token
+
+Copy the token from the service account created in that project
+(User Management > Service Accounts > (tower) <-The one you made in the earlier steps)
+
+image:images/token.png[640,480]
 
 
-Copy stuff from the service account created in that project
-(User Management > Service Accounts > The one you made in the earlier steps)
 
 
-[black]*OPENSHIFT OR KUBERNETES API ENDPOINT*(short version from oc login with https://api.foo.openshift.io:6443)
+
+[black]*OPENSHIFT OR KUBERNETES API ENDPOINT*
+
+I grabbed the short version from the oc login command, it should look like (https://api.foo.openshift.io:6443)
 
 
-[black]*API AUTHENTICATION BEARER TOKEN* (can be used by itself without cert auth data, you don't need both)
 
-[black]*CERTIFICATE AUTHORITY DATA*
-
-[red]*Create the Container Group*
+[big black]*2. Create the Container Group*
 
 In Ansible Tower under Instance Groups > The green plus symbol > CREATE CONTAINER GROUP
 
 image:images/instance-group.png[640,480]
 
-[red]*Configure the Container Group*
+[big black]*3. Configure the Container Group*
 
 Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.
 
-image:images/container-group.png[640,480]
+image:images/cg.png[640,480]
 
 Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.
 
@@ -178,7 +182,7 @@ CMD ["ansible-runner", "run", "/runner"]
 
 
 
-[red]*Quay/Clair*
+[big red]*Quay/Clair*
 
 Red Hat Quay - Container image registry
 
@@ -195,7 +199,7 @@ image:images/quay.jpeg[640,480]
 
 
 
-[red]*Final thoughts*
+[big red]*Final thoughts*
 
 
 This is a great way to get started with...
