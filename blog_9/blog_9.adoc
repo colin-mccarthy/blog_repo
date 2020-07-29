@@ -151,9 +151,9 @@ spec:
 
 [black]*What about module dependencies?*
 
-As we know in Ansible Tower we need to install out dependencies in custom virtual environments.
+As we know in Ansible Tower we need to install our dependencies in custom virtual environments.
 How can we accomplish this when using Container Groups?
-Make your own container images with the dependencies already installed. Start by creating a base Ansible Runner image in Quay.
+Well, you can make your own container images with the dependencies already installed. Start by creating a base Ansible Runner image in Quay.
 This way you control the software delivery supply chain. Mine is listed below.
 
 
@@ -170,7 +170,8 @@ https://github.com/ansible/ansible-runner/blob/devel/Dockerfile.dev[Dockerfile.d
 
 [black]*Runner with pysnow package installed*
 
-https://quay.io/repository/colin_mccarthy/pysnow_pod
+I then made a new https://quay.io/repository/colin_mccarthy/pysnow_pod[image], I went ahead and installed the dependency (pysnow)
+via pip right in the Dockerfile.
 
 
 [black]*Dockerfile*
@@ -184,7 +185,9 @@ RUN pip3 install --no-cache-dir pysnow
 CMD ["ansible-runner", "run", "/runner"]
 ```
 
-Once you have made your own image/s you can use them in your pod manifest like this.
+I built a new image in Quay based on this Dockerfile and now its ready to use
+in my Pod manifest like this.
+
 
 ```
 apiVersion: v1
