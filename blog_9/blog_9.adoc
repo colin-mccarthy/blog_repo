@@ -25,6 +25,10 @@ endif::[]
 
 
 
+
+
+
+
 [red]*Ansible Tower Container groups*
 
 What are they?
@@ -40,21 +44,47 @@ https://github.com/ansible/ansible-runner
 
 [red]*OpenShift Steps*
 
-Create a Project/NameSpace (ansible-tower)
+[black]*1. Create a Project/Namespace in OpenShift named (ansible-tower).*
 
-image:images/cred.png[640,480]
+image:images/project.png[640,480]
 
-Create a ServiceAccount
+[black]*2. Create a ServiceAccount named (tower).*
 
-image:images/cred.png[640,480]
+image:images/service.png[640,480]
 
-Create a Role (pod-manager)
+[black]*3. Create a Role named (pod-manager).*
 
-image:images/cred.png[640,480]
+```
+kind: Role
+metadata:
+  name: pod-manager
+  namespace: ansible-tower
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+    apiGroups:
+      - ''
+    resources:
+      - pods
+  - verbs:
+      - create
+    apiGroups:
+      - ''
+    resources:
+      - pods/exec
+```
 
-Create a RoleBinding
+image:images/role.png[640,480]
 
-image:images/cred.png[640,480]
+[black]*4. Create a RoleBinding* that binds the pod manager role to the tower service account.
+
+image:images/binding.png[640,480]
 
 
 
