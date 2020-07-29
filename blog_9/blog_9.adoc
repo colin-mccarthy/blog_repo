@@ -34,15 +34,19 @@ endif::[]
 What are they?
 Serverless functions, Tower feature that runs a playbook on OpenShift/Kubernetes.
 
+<Video Here>
 
-[big red]*Ansible Runner*
+
+This is made possible by using Ansible Runner.
 
 The project can be found under the Ansible org on GitHub.
 
 https://github.com/ansible/ansible-runner
 
+Below I will detail the steps required to set this up.
 
-[big red]*OpenShift Steps*
+
+[big red]*OpenShift*
 
 [black]*1. Create a Project/Namespace in OpenShift named (ansible-tower).*
 
@@ -88,7 +92,7 @@ image:images/binding.png[640,480]
 
 
 
-[big red]*Ansible Tower Steps*
+[big red]*Ansible Tower*
 
 [big black]*1. Create the Credential*
 
@@ -96,7 +100,7 @@ image:images/cred.png[640,480]
 
 [black]*CREDENTIAL TYPE*
 
-Your OpenShift or Kubernetes API Bearer Token
+Choose the  OpenShift or Kubernetes API Bearer Token type.
 
 Copy the token from the service account created in that project
 (User Management > Service Accounts > (tower) <-The one you made in the earlier steps)
@@ -145,16 +149,17 @@ spec:
         - infinity
 ```
 
-[red]*What about module dependencies?*
+[black]*What about module dependencies?*
 
-Make your own container images! Start by creating a base Ansible Runner image in Quay.
-This way you control the software delivery supply chain.
+As we know in Ansible Tower we need to install out dependencies in custom virtual environments.
+How can we accomplish this when using Container Groups?
+Make your own container images with the dependencies already installed. Start by creating a base Ansible Runner image in Quay.
+This way you control the software delivery supply chain. Mine is listed below.
 
-[black]*Ansible Runner*
 
 https://quay.io/repository/colin_mccarthy/ansible-runner
 
-Built by cloning ansible runner repo and then building from
+I built this by cloning the Ansible Runner Github repo and then building from
 https://github.com/ansible/ansible-runner/blob/devel/Dockerfile.dev[Dockerfile.dev]
 
 
