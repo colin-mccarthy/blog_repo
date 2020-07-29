@@ -179,20 +179,26 @@ RUN pip3 install --no-cache-dir pysnow
 CMD ["ansible-runner", "run", "/runner"]
 ```
 
+Once you have made your own image/s you can use them in your pod manifest like this.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: ansible-tower
+spec:
+  containers:
+    - image: 'quay.io/colin_mccarthy/pysnow_pod:latest'
+      tty: true
+      stdin: true
+      imagePullPolicy: Always
+      args:
+        - sleep
+        - infinity
+```
 
 
 
-[big red]*Quay/Clair*
-
-Red Hat Quay - Container image registry
-
-https://quay.io
-
-
-
-Clair - Scanner
-
-image:images/quay.jpeg[640,480]
 
 
 
@@ -201,8 +207,23 @@ image:images/quay.jpeg[640,480]
 
 [big red]*Final thoughts*
 
+This is a great way to get started with OpenShift if your coming from an Ansible background.
+I suggest you look at Quay and build some images using the source from a Git repo option.
+The GitOps and vulnerability scanning is really great.
 
-This is a great way to get started with...
+[big red]*Quay/Clair*
+
+Red Hat Quay - Container image registry
+
+https://quay.io
+
+
+Clair - Scanner
+
+image:images/quay.jpeg[640,480]
+
+
+
 
 
 
