@@ -117,13 +117,13 @@ I grabbed the short version from the oc login command, it should look like (http
 
 In Ansible Tower under Instance Groups > The green plus symbol > CREATE CONTAINER GROUP
 
-image:images/instance-group.png[640,480]
+image:images/insgroup.png[640,480]
 
 [big black]*3. Configure the Container Group*
 
 Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.
 
-image:images/cg.png[640,480]
+image:images/congroup.png[640,480]
 
 Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.
 
