@@ -31,7 +31,7 @@ endif::[]
 
 [big red]*Ansible Tower Container groups*
 
-What are they? a Serverless functions? a Tower feature?
+What are they? Serverless functions? a Tower feature?
  a playbook that runs on OpenShift/Kubernetes?
 
 <Video Here>
