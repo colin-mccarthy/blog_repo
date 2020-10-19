@@ -733,7 +733,6 @@ asciidoc.install(6);
 <body class="article">
 <div id="header">
 <h1> <strong><span class="black">Ansible Container Groups</span></strong></h1>
-<span id="author">TheNetwork.Engineer</span><br />
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
@@ -743,21 +742,21 @@ asciidoc.install(6);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p><strong><span class="big red">Ansible Tower Container groups</span></strong></p></div>
-<div class="paragraph"><p>What are they? Serverless functions? a Tower feature?
- a playbook that runs on OpenShift/Kubernetes?</p></div>
+<div class="paragraph"><p>What are they? Serverless functions, a Tower feature,
+ an integration to run your playbooks in OpenShift/Kubernetes pods.</p></div>
 <div class="paragraph"><p>&lt;Video Here&gt;</p></div>
 <div class="paragraph"><p>This is made possible by using Ansible Runner.</p></div>
 <div class="paragraph"><p>The project can be found under the Ansible org on GitHub.</p></div>
 <div class="paragraph"><p><a href="https://github.com/ansible/ansible-runner">https://github.com/ansible/ansible-runner</a></p></div>
 <div class="paragraph"><p>Below I will detail the steps required to set this up.</p></div>
-<div class="paragraph"><p><strong><span class="big red">OpenShift</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="big black">OpenShift</span></strong></p></div>
 <div class="paragraph"><p><strong><span class="black">1. Create a Project/Namespace in OpenShift named (ansible-tower).</span></strong></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/project.png" alt="640" />
+<img src="images/project.png" alt="images/project.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">2. Create a ServiceAccount named (tower).</span></strong></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/service.png" alt="640" />
+<img src="images/service.png" alt="images/service.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">3. Create a Role named (pod-manager).</span></strong></p></div>
 <div class="paragraph"><p>&#8216;``
@@ -786,35 +785,35 @@ rules:
       - pods/exec
 ```</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/role.png" alt="640" />
+<img src="images/role.png" alt="images/role.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">4. Create a RoleBinding</span></strong> that binds the pod manager role to the tower service account.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/binding.png" alt="640" />
+<img src="images/binding.png" alt="images/binding.png" />
 </span></p></div>
-<div class="paragraph"><p><strong><span class="big red">Ansible Tower</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="big black">Ansible Tower</span></strong></p></div>
 <div class="paragraph"><p><strong><span class="big black">1. Create the Credential</span></strong></p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/cred.png" alt="640" />
+<img src="images/cred.png" alt="images/cred.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">CREDENTIAL TYPE</span></strong></p></div>
 <div class="paragraph"><p>Choose the  OpenShift or Kubernetes API Bearer Token type.</p></div>
 <div class="paragraph"><p>Copy the token from the service account created in that project
 (User Management &gt; Service Accounts &gt; (tower) &#8592;The one you made in the earlier steps)</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/token.png" alt="640" />
+<img src="images/token.png" alt="images/token.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">OPENSHIFT OR KUBERNETES API ENDPOINT</span></strong></p></div>
 <div class="paragraph"><p>I grabbed the short version from the oc login command, it should look like (<a href="https://api.foo.openshift.io:6443">https://api.foo.openshift.io:6443</a>)</p></div>
 <div class="paragraph"><p><strong><span class="big black">2. Create the Container Group</span></strong></p></div>
 <div class="paragraph"><p>In Ansible Tower under Instance Groups &gt; The green plus symbol &gt; CREATE CONTAINER GROUP</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/insgroup.png" alt="640" />
+<img src="images/insgroup.png" alt="images/insgroup.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="big black">3. Configure the Container Group</span></strong></p></div>
 <div class="paragraph"><p>Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/congroup.png" alt="640" />
+<img src="images/congroup.png" alt="images/congroup.png" />
 </span></p></div>
 <div class="paragraph"><p>Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.</p></div>
 <div class="paragraph"><p><strong><span class="black">Pod manifest</span></strong></p></div>
@@ -869,7 +868,7 @@ spec:
         - sleep
         - infinity
 ```</p></div>
-<div class="paragraph"><p><strong><span class="big red">Final thoughts</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="big black">Final thoughts</span></strong></p></div>
 <div class="paragraph"><p>This is a great way to get started with OpenShift if your coming from an Ansible background.
 I suggest you look at Quay and build some images using the source from a Git repo option.
 The GitOps and vulnerability scanning is really great.</p></div>
@@ -878,7 +877,7 @@ The GitOps and vulnerability scanning is really great.</p></div>
 <div class="paragraph"><p><a href="https://quay.io">https://quay.io</a></p></div>
 <div class="paragraph"><p>Clair - Scanner</p></div>
 <div class="paragraph"><p><span class="image">
-<img src="images/quay.jpeg" alt="640" />
+<img src="images/quay.jpeg" alt="images/quay.jpeg" />
 </span></p></div>
 <div class="tableblock">
 <table rules="all"
@@ -889,14 +888,14 @@ cellspacing="0" cellpadding="4">
 </tbody>
 </table>
 </div>
-<div class="paragraph"><p>TheNetwork.Engineer - July 26 2020  -  Colin McCarthy</p></div>
+<div class="paragraph"><p>TheNetwork.Engineer - OCT 19 2020  -  Colin McCarthy</p></div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-10-19 15:55:44 UTC
+Last updated 2020-10-19 16:26:02 UTC
 </div>
 </div>
 </body>
