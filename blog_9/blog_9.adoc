@@ -2,7 +2,6 @@
 TheNetwork.Engineer
 :subject:
 :description:
-:doctype:
 :confidentiality:
 :listing-caption: Listing
 :toc:
