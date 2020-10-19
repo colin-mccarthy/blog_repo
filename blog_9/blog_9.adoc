@@ -1,5 +1,4 @@
 = {subject} [black]*Ansible Container Groups*
-TheNetwork.Engineer
 :subject:
 :description:
 :confidentiality:
@@ -30,8 +29,8 @@ endif::[]
 
 [big red]*Ansible Tower Container groups*
 
-What are they? Serverless functions? a Tower feature?
- a playbook that runs on OpenShift/Kubernetes?
+What are they? Serverless functions, a Tower feature,
+ an integration to run your playbooks in OpenShift/Kubernetes pods.
 
 <Video Here>
 
@@ -45,15 +44,15 @@ https://github.com/ansible/ansible-runner
 Below I will detail the steps required to set this up.
 
 
-[big red]*OpenShift*
+[big black]*OpenShift*
 
 [black]*1. Create a Project/Namespace in OpenShift named (ansible-tower).*
 
-image:images/project.png[640,480]
+image:images/project.png[]
 
 [black]*2. Create a ServiceAccount named (tower).*
 
-image:images/service.png[640,480]
+image:images/service.png[]
 
 [black]*3. Create a Role named (pod-manager).*
 
@@ -83,19 +82,19 @@ rules:
       - pods/exec
 ```
 
-image:images/role.png[640,480]
+image:images/role.png[]
 
 [black]*4. Create a RoleBinding* that binds the pod manager role to the tower service account.
 
-image:images/binding.png[640,480]
+image:images/binding.png[]
 
 
 
-[big red]*Ansible Tower*
+[big black]*Ansible Tower*
 
 [big black]*1. Create the Credential*
 
-image:images/cred.png[640,480]
+image:images/cred.png[]
 
 [black]*CREDENTIAL TYPE*
 
@@ -104,7 +103,7 @@ Choose the  OpenShift or Kubernetes API Bearer Token type.
 Copy the token from the service account created in that project
 (User Management > Service Accounts > (tower) <-The one you made in the earlier steps)
 
-image:images/token.png[640,480]
+image:images/token.png[]
 
 
 
@@ -120,13 +119,13 @@ I grabbed the short version from the oc login command, it should look like (http
 
 In Ansible Tower under Instance Groups > The green plus symbol > CREATE CONTAINER GROUP
 
-image:images/insgroup.png[640,480]
+image:images/insgroup.png[]
 
 [big black]*3. Configure the Container Group*
 
 Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.
 
-image:images/congroup.png[640,480]
+image:images/congroup.png[]
 
 Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.
 
@@ -212,7 +211,7 @@ spec:
 
 
 
-[big red]*Final thoughts*
+[big black]*Final thoughts*
 
 This is a great way to get started with OpenShift if your coming from an Ansible background.
 I suggest you look at Quay and build some images using the source from a Git repo option.
@@ -227,7 +226,7 @@ https://quay.io
 
 Clair - Scanner
 
-image:images/quay.jpeg[640,480]
+image:images/quay.jpeg[]
 
 
 
@@ -245,5 +244,5 @@ image:images/quay.jpeg[640,480]
 |===
 
 |===
-TheNetwork.Engineer - July 26 2020  -  Colin McCarthy
+TheNetwork.Engineer - OCT 19 2020  -  Colin McCarthy
 |===
