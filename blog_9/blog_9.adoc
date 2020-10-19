@@ -56,7 +56,9 @@ image:images/service.png[]
 
 [black]*3. Create a Role named (pod-manager).*
 
-```
+[source,yaml]
+----
+---
 kind: Role
 metadata:
   name: pod-manager
@@ -80,7 +82,7 @@ rules:
       - ''
     resources:
       - pods/exec
-```
+---
 
 image:images/role.png[]
 
@@ -131,7 +133,9 @@ Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one 
 
 [black]*Pod manifest*
 
-```
+[source,yaml]
+----
+---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -145,7 +149,7 @@ spec:
       args:
         - sleep
         - infinity
-```
+---
 
 [black]*What about module dependencies?*
 
@@ -173,7 +177,10 @@ via pip right in the Dockerfile.
 
 
 [black]*Dockerfile*
-```
+
+[source,yaml]
+----
+---
 FROM quay.io/colin_mccarthy/ansible-runner:stable_1.4.x
 
 # dependencies
@@ -181,13 +188,14 @@ RUN pip3 install --no-cache-dir pysnow
 
 # required
 CMD ["ansible-runner", "run", "/runner"]
-```
+---
 
 I built a new image in Quay based on this Dockerfile and now its ready to use
 in my Pod manifest like this.
 
-
-```
+[source,yaml]
+----
+---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -201,7 +209,7 @@ spec:
       args:
         - sleep
         - infinity
-```
+---
 
 
 
