@@ -224,7 +224,7 @@ div.exampleblock > div.content {
 }
 
 div.imageblock div.content { padding-left: 0; }
-span.image img { border-style: none; }
+span.image img { max-width: 70%; height: auto; border-style: none; }
 a.image:visited { color: white; }
 
 dl {
@@ -732,44 +732,44 @@ asciidoc.install(6);
 </head>
 <body class="article">
 <div id="header">
-<h1> <strong><span class="black">Ansible Container Groups</span></strong></h1>
 <div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p><strong><span class="big black">Ansible Tower Container groups</span></strong></p></div>
-<div class="paragraph"><p>What are they? Serverless functions, a Tower feature,
- an integration to run your playbooks in OpenShift/Kubernetes pods.</p></div>
-<div class="paragraph"><p>&lt;Video Here&gt;</p></div>
+<div class="paragraph"><p>What are they? Serverless functions?.. a new Tower feature?..
+ Well they are an integration to run your playbooks in OpenShift/Kubernetes pods. Check out this video to see this feature in action.</p></div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fBNTYOovtkI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <div class="paragraph"><p>This is made possible by using Ansible Runner.</p></div>
 <div class="paragraph"><p>The project can be found under the Ansible org on GitHub.</p></div>
 <div class="paragraph"><p><a href="https://github.com/ansible/ansible-runner">https://github.com/ansible/ansible-runner</a></p></div>
-<div class="paragraph"><p>Below I will detail the steps required to set this up.</p></div>
-<div class="paragraph"><p><strong><span class="big black">OpenShift</span></strong></p></div>
-<div class="paragraph"><p><strong><span class="black">1. Create a Project/Namespace in OpenShift named (ansible-tower).</span></strong></p></div>
+<div class="paragraph"><p>Below I will detail the steps required to set this up. Then show you how to build some Dockerfiles that use Ansible Runner</p></div>
+<div class="paragraph"><p><strong><span class="big black">Let's set up the OpenShift requirements for Container Groups.</span></strong></p></div>
+</span></p></div>
+<div class="paragraph"><p><strong><span class="black">1. Create a Project/Namespace in OpenShift named (ansible-tower). This can be done in the OpenShift console or via oc/kubectl.</span></strong></p></div>
+<script src="https://gist.github.com/colin-mccarthy/cfe0b038d2133c5a422d7727f41a6eda.js"></script>
 <div class="paragraph"><p><span class="image">
 <img src="images/project.png" alt="images/project.png" />
 </span></p></div>
-<div class="paragraph"><p><strong><span class="black">2. Create a ServiceAccount named (tower).</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="black">2. Create a ServiceAccount named (tower).This can be done in the OpenShift console or via oc/kubectl.</span></strong></p></div>
+<script src="https://gist.github.com/colin-mccarthy/3e07a849cbc966d918283649bc984680.js"></script>
 <div class="paragraph"><p><span class="image">
 <img src="images/service.png" alt="images/service.png" />
 </span></p></div>
-<div class="paragraph"><p><strong><span class="black">3. Create a Role named (pod-manager).</span></strong></p></div>
-<div class="listingblock">
+<div class="paragraph"><p><strong><span class="black">3. Create a Role named (pod-manager).This can be done in the OpenShift console or via oc/kubectl.</span></strong></p></div>
+<script src="https://gist.github.com/colin-mccarthy/184db6f1c6a55b7d71bf30458eb57fe6.js"></script>
 <div class="content"></div></div>
 <div class="paragraph"><p><span class="image">
 <img src="images/role.png" alt="images/role.png" />
 </span></p></div>
-<div class="paragraph"><p><strong><span class="black">4. Create a RoleBinding</span></strong> that binds the pod manager role to the tower service account.</p></div>
+<div class="paragraph"><p><strong><span class="black">4. Create a RoleBinding</span></strong> that binds the pod manager role to the tower service account.This can be done in the OpenShift console or via oc/kubectl.</p></div>
+<script src="https://gist.github.com/colin-mccarthy/d36b6de79d46af649eb45ec2454d744a.js"></script>
 <div class="paragraph"><p><span class="image">
 <img src="images/binding.png" alt="images/binding.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="big black">Ansible Tower</span></strong></p></div>
-<div class="paragraph"><p><strong><span class="big black">1. Create the Credential</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="big black">Let's set up the Ansible Tower requirements for Container Groups.</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="black">1. Create the Credential</span></strong></p></div>
 <div class="paragraph"><p><span class="image">
 <img src="images/cred.png" alt="images/cred.png" />
 </span></p></div>
@@ -782,21 +782,21 @@ asciidoc.install(6);
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">OPENSHIFT OR KUBERNETES API ENDPOINT</span></strong></p></div>
 <div class="paragraph"><p>I grabbed the short version from the oc login command, it should look like (<a href="https://api.foo.openshift.io:6443">https://api.foo.openshift.io:6443</a>)</p></div>
-<div class="paragraph"><p><strong><span class="big black">2. Create the Container Group</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="black">2. Create the Container Group</span></strong></p></div>
 <div class="paragraph"><p>In Ansible Tower under Instance Groups &gt; The green plus symbol &gt; CREATE CONTAINER GROUP</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="images/insgroup.png" alt="images/insgroup.png" />
 </span></p></div>
-<div class="paragraph"><p><strong><span class="big black">3. Configure the Container Group</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="black">3. Configure the Container Group</span></strong></p></div>
 <div class="paragraph"><p>Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.</p></div>
 <div class="paragraph"><p><span class="image">
 <img src="images/congroup.png" alt="images/congroup.png" />
 </span></p></div>
 <div class="paragraph"><p>Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.</p></div>
 <div class="paragraph"><p><strong><span class="black">Pod manifest</span></strong></p></div>
-<div class="listingblock">
+<script src="https://gist.github.com/colin-mccarthy/0a23adfea21fba845d3f0d26380cabc8.js"></script>
 <div class="content"></div></div>
-<div class="paragraph"><p><strong><span class="black">What about module dependencies?</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="big black">What about module dependencies?</span></strong></p></div>
 <div class="paragraph"><p>As we know in Ansible Tower we need to install our dependencies in custom virtual environments.
 How can we accomplish this when using Container Groups?
 Well, you can make your own container images with the dependencies already installed. Start by creating a base Ansible Runner image in Quay.
@@ -808,17 +808,17 @@ This way you control the software delivery supply chain. Mine is listed below.</
 <div class="paragraph"><p>I then made a new <a href="https://quay.io/repository/colin_mccarthy/pysnow_pod">image</a>, I went ahead and installed the dependency (pysnow)
 via pip right in the Dockerfile.</p></div>
 <div class="paragraph"><p><strong><span class="black">Dockerfile</span></strong></p></div>
-<div class="listingblock">
+<script src="https://gist.github.com/colin-mccarthy/832cbbcebf8c5a3d518fd86186983828.js"></script>
 <div class="content"></div></div>
 <div class="paragraph"><p>I built a new image in Quay based on this Dockerfile and now its ready to use
 in my Pod manifest like this.</p></div>
-<div class="listingblock">
+<script src="https://gist.github.com/colin-mccarthy/7197e09450860f423d09aff087660d0d.js"></script>
 <div class="content"></div></div>
 <div class="paragraph"><p><strong><span class="big black">Final thoughts</span></strong></p></div>
 <div class="paragraph"><p>This is a great way to get started with OpenShift if your coming from an Ansible background.
 I suggest you look at Quay and build some images using the source from a Git repo option.
 The GitOps and vulnerability scanning is really great.</p></div>
-<div class="paragraph"><p><strong><span class="big black">Quay/Clair</span></strong></p></div>
+<div class="paragraph"><p><strong><span class="red">Quay/Clair</span></strong></p></div>
 <div class="paragraph"><p>Red Hat Quay - Container image registry</p></div>
 <div class="paragraph"><p><a href="https://quay.io">https://quay.io</a></p></div>
 <div class="paragraph"><p>Clair - Scanner</p></div>
