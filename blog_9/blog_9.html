@@ -759,65 +759,9 @@ asciidoc.install(6);
 <img src="images/service.png" alt="images/service.png" />
 </span></p></div>
 <div class="paragraph"><p><strong><span class="black">3. Create a Role named (pod-manager).</span></strong></p></div>
-<div class="paragraph"><p>&#8216;``
-kind: Role
-metadata:
-  name: pod-manager
-  namespace: ansible-tower
-rules:
-  - verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-    apiGroups:
-      - <em>&#8217;
-    resources:
-      - pods
-  - verbs:
-      - create
-    apiGroups:
-      - '</em>
-    resources:
-      - pods/exec
-```</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/role.png" alt="images/role.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="black">4. Create a RoleBinding</span></strong> that binds the pod manager role to the tower service account.</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/binding.png" alt="images/binding.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="big black">Ansible Tower</span></strong></p></div>
-<div class="paragraph"><p><strong><span class="big black">1. Create the Credential</span></strong></p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/cred.png" alt="images/cred.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="black">CREDENTIAL TYPE</span></strong></p></div>
-<div class="paragraph"><p>Choose the  OpenShift or Kubernetes API Bearer Token type.</p></div>
-<div class="paragraph"><p>Copy the token from the service account created in that project
-(User Management &gt; Service Accounts &gt; (tower) &#8592;The one you made in the earlier steps)</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/token.png" alt="images/token.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="black">OPENSHIFT OR KUBERNETES API ENDPOINT</span></strong></p></div>
-<div class="paragraph"><p>I grabbed the short version from the oc login command, it should look like (<a href="https://api.foo.openshift.io:6443">https://api.foo.openshift.io:6443</a>)</p></div>
-<div class="paragraph"><p><strong><span class="big black">2. Create the Container Group</span></strong></p></div>
-<div class="paragraph"><p>In Ansible Tower under Instance Groups &gt; The green plus symbol &gt; CREATE CONTAINER GROUP</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/insgroup.png" alt="images/insgroup.png" />
-</span></p></div>
-<div class="paragraph"><p><strong><span class="big black">3. Configure the Container Group</span></strong></p></div>
-<div class="paragraph"><p>Give it a name and select the OpenShift or Kubernetes API Bearer Token we created earlier in the steps above.</p></div>
-<div class="paragraph"><p><span class="image">
-<img src="images/congroup.png" alt="images/congroup.png" />
-</span></p></div>
-<div class="paragraph"><p>Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one as a default when first getting started.</p></div>
-<div class="paragraph"><p><strong><span class="black">Pod manifest</span></strong></p></div>
-<div class="paragraph"><p>```
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -831,7 +775,7 @@ spec:
       args:
         - sleep
         - infinity
-```</p></div>
+---</p></div>
 <div class="paragraph"><p><strong><span class="black">What about module dependencies?</span></strong></p></div>
 <div class="paragraph"><p>As we know in Ansible Tower we need to install our dependencies in custom virtual environments.
 How can we accomplish this when using Container Groups?
@@ -843,17 +787,10 @@ This way you control the software delivery supply chain. Mine is listed below.</
 <div class="paragraph"><p><strong><span class="black">Runner with pysnow package installed</span></strong></p></div>
 <div class="paragraph"><p>I then made a new <a href="https://quay.io/repository/colin_mccarthy/pysnow_pod">image</a>, I went ahead and installed the dependency (pysnow)
 via pip right in the Dockerfile.</p></div>
-<div class="paragraph"><p><strong><span class="black">Dockerfile</span></strong>
-```
-FROM quay.io/colin_mccarthy/ansible-runner:stable_1.4.x</p></div>
-<div class="paragraph"><p># dependencies
-RUN pip3 install --no-cache-dir pysnow</p></div>
-<div class="paragraph"><p># required
-CMD ["ansible-runner", "run", "/runner"]
-```</p></div>
-<div class="paragraph"><p>I built a new image in Quay based on this Dockerfile and now its ready to use
-in my Pod manifest like this.</p></div>
-<div class="paragraph"><p>```
+<div class="paragraph"><p><strong><span class="black">Dockerfile</span></strong></p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>---
 apiVersion: v1
 kind: Pod
 metadata:
@@ -867,7 +804,7 @@ spec:
       args:
         - sleep
         - infinity
-```</p></div>
+---</p></div>
 <div class="paragraph"><p><strong><span class="big black">Final thoughts</span></strong></p></div>
 <div class="paragraph"><p>This is a great way to get started with OpenShift if your coming from an Ansible background.
 I suggest you look at Quay and build some images using the source from a Git repo option.
@@ -895,7 +832,7 @@ cellspacing="0" cellpadding="4">
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-10-19 16:26:02 UTC
+Last updated 2020-10-19 16:44:25 UTC
 </div>
 </div>
 </body>
