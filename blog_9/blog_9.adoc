@@ -27,7 +27,7 @@ endif::[]
 
 
 
-[big red]*Ansible Tower Container groups*
+[big black]*Ansible Tower Container groups*
 
 What are they? Serverless functions, a Tower feature,
  an integration to run your playbooks in OpenShift/Kubernetes pods.
@@ -58,7 +58,6 @@ image:images/service.png[]
 
 [source,yaml]
 ----
----
 kind: Role
 metadata:
   name: pod-manager
@@ -82,7 +81,7 @@ rules:
       - ''
     resources:
       - pods/exec
----
+----
 
 image:images/role.png[]
 
@@ -135,7 +134,6 @@ Now the fun part, paste in your Kubernetes Pod manifest. I like to use this one 
 
 [source,yaml]
 ----
----
 apiVersion: v1
 kind: Pod
 metadata:
@@ -149,7 +147,7 @@ spec:
       args:
         - sleep
         - infinity
----
+----
 
 [black]*What about module dependencies?*
 
@@ -180,7 +178,6 @@ via pip right in the Dockerfile.
 
 [source,yaml]
 ----
----
 FROM quay.io/colin_mccarthy/ansible-runner:stable_1.4.x
 
 # dependencies
@@ -188,14 +185,13 @@ RUN pip3 install --no-cache-dir pysnow
 
 # required
 CMD ["ansible-runner", "run", "/runner"]
----
+----
 
 I built a new image in Quay based on this Dockerfile and now its ready to use
 in my Pod manifest like this.
 
 [source,yaml]
 ----
----
 apiVersion: v1
 kind: Pod
 metadata:
@@ -209,7 +205,7 @@ spec:
       args:
         - sleep
         - infinity
----
+----
 
 
 
@@ -225,7 +221,7 @@ This is a great way to get started with OpenShift if your coming from an Ansible
 I suggest you look at Quay and build some images using the source from a Git repo option.
 The GitOps and vulnerability scanning is really great.
 
-[big red]*Quay/Clair*
+[big black]*Quay/Clair*
 
 Red Hat Quay - Container image registry
 
@@ -238,15 +234,6 @@ image:images/quay.jpeg[]
 
 
 
-
-
-
-
-
-
-
-|===
-|===
 
 
 |===
